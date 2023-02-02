@@ -16,7 +16,9 @@ class Coordinates:
         self.longitude = longitude
 
     @classmethod
-    def distance_between(cls, coordinates1: "Coordinates", coordinates2: "Coordinates"):
+    def distance_between(
+        cls, coordinates1: "Coordinates", coordinates2: "Coordinates"
+    ):
         return math.sqrt(
             (coordinates1.latitude - coordinates2.latitude) ** 2
             + (coordinates1.longitude - coordinates2.longitude) ** 2
@@ -45,7 +47,9 @@ class Stop:
 
     @classmethod
     def distance_between(cls, stop1: "Stop", stop2: "Stop"):
-        return Coordinates.distance_between(stop1.coordinates, stop2.coordinates)
+        return Coordinates.distance_between(
+            stop1.coordinates, stop2.coordinates
+        )
 
     def __str__(self):
         return f"Stop({self.name}, {self.coordinates})"
@@ -58,16 +62,24 @@ class StopTime:
 
     def is_after(self, route_location: RouteLocation) -> bool:
         if route_location.direction == Direction.NORTH:
-            return self.stop.coordinates.latitude >= route_location.coordinates.latitude
+            return (
+                self.stop.coordinates.latitude
+                >= route_location.coordinates.latitude
+            )
         if route_location.direction == Direction.SOUTH:
-            return self.stop.coordinates.latitude <= route_location.coordinates.latitude
+            return (
+                self.stop.coordinates.latitude
+                <= route_location.coordinates.latitude
+            )
         if route_location.direction == Direction.EAST:
             return (
-                self.stop.coordinates.longitude >= route_location.coordinates.longitude
+                self.stop.coordinates.longitude
+                >= route_location.coordinates.longitude
             )
         if route_location.direction == Direction.WEST:
             return (
-                self.stop.coordinates.longitude <= route_location.coordinates.longitude
+                self.stop.coordinates.longitude
+                <= route_location.coordinates.longitude
             )
 
     def __repr__(self):
@@ -75,7 +87,9 @@ class StopTime:
 
 
 class Route:
-    def __init__(self, number: int, direction: Direction, stop_times: list[StopTime]):
+    def __init__(
+        self, number: int, direction: Direction, stop_times: list[StopTime]
+    ):
         self.number = number
         self.direction = direction
         self.stop_times = stop_times
@@ -92,7 +106,7 @@ class TransportDatabase:
 class LocalDatabase(TransportDatabase):
     def get_route(self, number: int, direction: Direction) -> Route:
         with open("test_database.csv", "r") as file:
-            headers = next(file)
+            _ = next(file)  # this is the header
             data = (line.rstrip().split(",") for line in file)
 
             route_data = (
@@ -103,12 +117,21 @@ class LocalDatabase(TransportDatabase):
 
             stop_times = []
             for row in route_data:
-                stop_name, route_time, latitude, longitude, route_number, _ = row
+                (
+                    stop_name,
+                    route_time,
+                    latitude,
+                    longitude,
+                    route_number,
+                    _,
+                ) = row
                 route_time = datetime.datetime.strptime(route_time, "%H:%M")
                 route_time = datetime.timedelta(
                     hours=route_time.hour, minutes=route_time.minute
                 )
-                stop = Stop(stop_name, Coordinates(float(latitude), float(longitude)))
+                stop = Stop(
+                    stop_name, Coordinates(float(latitude), float(longitude))
+                )
                 stop_times.append(StopTime(stop, route_time))
 
             return Route(number, direction, stop_times)
@@ -118,7 +141,9 @@ class NextStopsFinder:
     def __init__(self, transport_database: TransportDatabase):
         self._transport_database = transport_database
 
-    def get_next_stop_times(self, route_location: RouteLocation) -> list[StopTime]:
+    def get_next_stop_times(
+        self, route_location: RouteLocation
+    ) -> list[StopTime]:
         route = self._transport_database.get_route(
             route_location.route_number, route_location.direction
         )
@@ -166,12 +191,15 @@ class NextStopsFinder:
         )
         proportion_travelled = (
             Coordinates.distance_between(
-                current_location.coordinates, previous_stop_time.stop.coordinates
+                current_location.coordinates,
+                previous_stop_time.stop.coordinates,
             )
             / distance_between_stops
         )
 
-        time_between_stops = next_stop_time.route_time - previous_stop_time.route_time
+        time_between_stops = (
+            next_stop_time.route_time - previous_stop_time.route_time
+        )
 
         return proportion_travelled * time_between_stops
 
@@ -188,7 +216,9 @@ class TripAnnouncer:
 
     def update_next_stop_times(self, location: RouteLocation):
         self.route_number = location.route_number
-        self.next_stop_times = self._next_stops_finder.get_next_stop_times(location)
+        self.next_stop_times = self._next_stops_finder.get_next_stop_times(
+            location
+        )
 
 
 class TripViewer:
@@ -201,20 +231,23 @@ class CommandlineDisplay(TripViewer):
         self._trip_announcer = trip_announcer
 
     def show_next_stop_times(self):
-        stops_display = '\n'.join(
-            f"{stop_time.stop.name} | {self._route_time_format(stop_time.route_time)}"
+        stops_display = "\n".join(
+            f"{stop_time.stop.name}"
+            "| {self._route_time_format(stop_time.route_time)}"
             for stop_time in self._trip_announcer.next_stop_times
         )
 
-        header_length = max(len(line) for line in stops_display.split('\n'))
-        header = f"Route {self._trip_announcer.route_number}".center(header_length, '-')
-        print('\n' + header)
-        print(stops_display + '\n')
+        header_length = max(len(line) for line in stops_display.split("\n"))
+        header = f"Route {self._trip_announcer.route_number}".center(
+            header_length, "-"
+        )
+        print("\n" + header)
+        print(stops_display + "\n")
 
     @classmethod
     def _route_time_format(cls, route_time: datetime.timedelta) -> str:
-        hours, minutes, seconds = str(route_time).split(':')
-        seconds = seconds.split('.')[0]
+        hours, minutes, seconds = str(route_time).split(":")
+        seconds = seconds.split(".")[0]
         if int(hours) == 0:
             return f"{minutes}:{seconds}"
         else:
@@ -236,7 +269,9 @@ class LocationSpecifier:
 
 
 class CommandlineLocationUpdator(LocationSpecifier):
-    def __init__(self, trip_announcer: TripAnnouncer, current_location: RouteLocation):
+    def __init__(
+        self, trip_announcer: TripAnnouncer, current_location: RouteLocation
+    ):
         self._trip_announcer = trip_announcer
         self._current_location = current_location
 
