@@ -15,7 +15,7 @@ class CommandlineDisplay(TripViewer):
     def show_next_stop_times(self):
         stops_display = "\n".join(
             f"{stop_time.stop.name}"
-            "| {self._route_time_format(stop_time.route_time)}"
+            f"| {self._route_time_format(stop_time.route_time)}"
             for stop_time in self._trip_announcer.next_stop_times
         )
 
