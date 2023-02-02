@@ -4,6 +4,7 @@ from enum import Enum
 
 
 class Direction(Enum):
+    """Test."""
     NORTH = 1
     SOUTH = 2
     EAST = 3
