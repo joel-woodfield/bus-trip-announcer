@@ -58,16 +58,16 @@ class StopTime:
 
     def is_after(self, route_location: RouteLocation) -> bool:
         if route_location.direction == Direction.NORTH:
-            return self.stop.coordinates.latitude > route_location.coordinates.latitude
+            return self.stop.coordinates.latitude >= route_location.coordinates.latitude
         if route_location.direction == Direction.SOUTH:
-            return self.stop.coordinates.latitude < route_location.coordinates.latitude
+            return self.stop.coordinates.latitude <= route_location.coordinates.latitude
         if route_location.direction == Direction.EAST:
             return (
-                self.stop.coordinates.longitude > route_location.coordinates.longitude
+                self.stop.coordinates.longitude >= route_location.coordinates.longitude
             )
         if route_location.direction == Direction.WEST:
             return (
-                self.stop.coordinates.longitude < route_location.coordinates.longitude
+                self.stop.coordinates.longitude <= route_location.coordinates.longitude
             )
 
     def __repr__(self):
@@ -184,8 +184,10 @@ class TripAnnouncer:
     def __init__(self, next_stops_finder: NextStopsFinder):
         self._next_stops_finder = next_stops_finder
         self.next_stop_times = None
+        self.route_number = -1
 
     def update_next_stop_times(self, location: RouteLocation):
+        self.route_number = location.route_number
         self.next_stop_times = self._next_stops_finder.get_next_stop_times(location)
 
 
@@ -199,7 +201,24 @@ class CommandlineDisplay(TripViewer):
         self._trip_announcer = trip_announcer
 
     def show_next_stop_times(self):
-        print(self._trip_announcer.next_stop_times)
+        stops_display = '\n'.join(
+            f"{stop_time.stop.name} | {self._route_time_format(stop_time.route_time)}"
+            for stop_time in self._trip_announcer.next_stop_times
+        )
+
+        header_length = max(len(line) for line in stops_display.split('\n'))
+        header = f"Route {self._trip_announcer.route_number}".center(header_length, '-')
+        print('\n' + header)
+        print(stops_display + '\n')
+
+    @classmethod
+    def _route_time_format(cls, route_time: datetime.timedelta) -> str:
+        hours, minutes, seconds = str(route_time).split(':')
+        seconds = seconds.split('.')[0]
+        if int(hours) == 0:
+            return f"{minutes}:{seconds}"
+        else:
+            return f"{hours}:{minutes}:{seconds}"
 
 
 class LocationSpecifier:
@@ -259,9 +278,11 @@ def main():
     stops_finder = NextStopsFinder(database)
     announcer = TripAnnouncer(stops_finder)
     updator = CommandlineLocationUpdator(announcer, RouteLocation())
+    display = CommandlineDisplay(announcer)
 
-    updator.update_trip_announcer()
-    print(announcer.next_stop_times)
+    while True:
+        updator.update_trip_announcer()
+        display.show_next_stop_times()
 
 
 if __name__ == "__main__":
