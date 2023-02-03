@@ -3,18 +3,18 @@ Contains the classes that display the trip information.
 """
 
 import datetime
+from typing import Protocol
 
 from announcer import TripAnnouncer
 
 
-class TripViewer:
+class TripViewer(Protocol):
     """
     Displays the next stop times.
     """
 
     def show_next_stop_times(self) -> None:
         """Displays the next stop times."""
-        raise NotImplementedError
 
 
 class CommandlineDisplay(TripViewer):
