@@ -29,8 +29,6 @@ class CommandlineDisplay(TripViewer):
     @classmethod
     def _route_time_format(cls, route_time: datetime.timedelta) -> str:
         hours, minutes, seconds = str(route_time).split(":")
-        seconds = seconds.split(".")[0]
         if int(hours) == 0:
-            return f"{minutes}:{seconds}"
-        else:
-            return f"{hours}:{minutes}:{seconds}"
+            return f"{int(minutes)}min"
+        return f"{int(hours)}hr {int(minutes)}min"
