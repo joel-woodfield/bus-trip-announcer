@@ -5,8 +5,8 @@ Contains classes that computes the next stops in the route.
 import datetime
 
 from database import TransportDatabase
-from model import RouteLocation, Stop, StopTime
-from util import Coordinates
+from models import RouteLocation, Stop, StopTime
+from utils import Coordinates
 
 
 class NextStopsFinder:

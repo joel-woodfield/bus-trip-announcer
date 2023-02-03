@@ -4,8 +4,8 @@ Manages the database that stores the route and stop information.
 
 import datetime
 
-from model import Route, Stop, StopTime
-from util import Coordinates, Direction
+from models import Route, Stop, StopTime
+from utils import Coordinates, Direction
 
 
 class TransportDatabase:
