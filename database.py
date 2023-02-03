@@ -3,12 +3,13 @@ Manages the database that stores the route and stop information.
 """
 
 import datetime
+from typing import Protocol
 
 from models import Route, Stop, StopTime
 from utils import Coordinates, Direction
 
 
-class TransportDatabase:
+class TransportDatabase(Protocol):
     """
     The database for the route information that can be queried.
     """
@@ -21,7 +22,6 @@ class TransportDatabase:
         :param direction: the direction of the route
         :return: the Route object corresponding to the parameters
         """
-        raise NotImplementedError
 
 
 class LocalDatabase(TransportDatabase):
