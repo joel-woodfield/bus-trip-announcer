@@ -64,7 +64,7 @@ class Stop:
             stop1.coordinates, stop2.coordinates
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """The string representation of the stop."""
         return f"Stop({self.name}, {self.coordinates})"
 
@@ -116,7 +116,7 @@ class StopTime:
                 <= route_location.coordinates.longitude
             )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         The representation of the stop time.
         """
@@ -149,7 +149,7 @@ class Route:
         self.direction = direction
         self.stop_times = stop_times
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         The string representation of the route.
         """

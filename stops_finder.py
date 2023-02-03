@@ -63,7 +63,7 @@ class NextStopsFinder:
     @classmethod
     def _get_next_stop_index(
         cls, stop_times: list[StopTime], route_location: RouteLocation
-    ):
+    ) -> int:
         """
         Returns the index in the route's list of stop times for the next stop in the trip after the current route
         location.
