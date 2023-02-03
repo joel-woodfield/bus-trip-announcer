@@ -20,6 +20,7 @@ class RouteLocation:
     coordinates: Coordinates = Coordinates(0, 0)
         the coordinates of the location within the bus route
     """
+
     def __init__(
         self,
         route_number: int = 0,
@@ -48,6 +49,7 @@ class Stop:
     coordinates: Coordinates
         the location of the stop
     """
+
     def __init__(self, name: str, coordinates: Coordinates):
         """
         Initializes the stop with the given parameters.
@@ -80,6 +82,7 @@ class StopTime:
     route_time: datetime.timedelta
         the time it takes for the bus to reach the stop for a given route
     """
+
     def __init__(self, stop: Stop, route_time: datetime.timedelta):
         """
         Initializes the stop time with the given parameters.
@@ -136,6 +139,7 @@ class Route:
     stop_times: list[StopTime]
         the stop times of the route (the stop and the time it takes to reach them).
     """
+
     def __init__(
         self, number: int, direction: Direction, stop_times: list[StopTime]
     ):
