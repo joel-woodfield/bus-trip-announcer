@@ -1,5 +1,6 @@
 """
-The starting point for the commandline version of the Bus Trip Announcer Application
+The starting point for the commandline version of the Bus Trip Announcer
+Application
 """
 
 from announcer import TripAnnouncer
@@ -12,7 +13,8 @@ from viewer import CommandlineDisplay
 
 def main() -> None:
     """
-    Initialize the application and run the input-output loop in the command line.
+    Initialize the application and run the input-output loop in the command
+    line.
     """
     database = LocalDatabase()
     stops_finder = NextStopsFinder(database)

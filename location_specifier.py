@@ -1,5 +1,6 @@
 """
-Contains classes that specify the current location to the announcer for it to update its next stops.
+Contains classes that specify the current location to the announcer for it to
+update its next stops.
 """
 
 from announcer import TripAnnouncer
@@ -11,6 +12,7 @@ class LocationSpecifier:
     """
     Specifies the current route location to the announcer.
     """
+
     def input_coordinates(self) -> None:
         """Specifies the coordinates to the announcer."""
         raise NotImplementedError
@@ -30,8 +32,10 @@ class LocationSpecifier:
 
 class CommandlineLocationUpdator(LocationSpecifier):
     """
-    Specifies the current route location to the announcer by asking for input in the command line.
+    Specifies the current route location to the announcer by asking for input
+    in the command line.
     """
+
     def __init__(
         self, trip_announcer: TripAnnouncer, current_location: RouteLocation
     ):

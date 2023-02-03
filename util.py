@@ -26,6 +26,7 @@ class Coordinates:
     longitude: float
         the longitude coordinate
     """
+
     def __init__(self, latitude: float, longitude: float):
         self.latitude = latitude
         self.longitude = longitude

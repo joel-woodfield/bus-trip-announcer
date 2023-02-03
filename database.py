@@ -15,7 +15,8 @@ class TransportDatabase:
 
     def get_route(self, number: int, direction: Direction) -> Route:
         """
-        Retrieves the Route object with its stop times for the given route number and direction.
+        Retrieves the Route object with its stop times for the given route
+        number and direction.
         :param number: the route number
         :param direction: the direction of the route
         :return: the Route object corresponding to the parameters
@@ -27,6 +28,7 @@ class LocalDatabase(TransportDatabase):
     """
     The database for the route information stored in `test_database.csv`.
     """
+
     ROUTE_NUMBER_COLUMN = 4
     DIRECTION_COLUMN = 5
     DATABASE_FILE = "test_database.csv"
@@ -39,7 +41,8 @@ class LocalDatabase(TransportDatabase):
             route_data = (
                 row
                 for row in data
-                if int(row[self.ROUTE_NUMBER_COLUMN]) == number and Direction[row[self.DIRECTION_COLUMN]] == direction
+                if int(row[self.ROUTE_NUMBER_COLUMN]) == number
+                and Direction[row[self.DIRECTION_COLUMN]] == direction
             )
 
             stop_times = []
