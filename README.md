@@ -9,13 +9,13 @@ Input the direction: NORTH
 Input Latitude: 45.7
 Input Longitude: 123.5
 
------------Route 100------------
-Gold Coast Avenue| 00:00
-Da Nang Centre| 03:00
-Hoi An Mall| 13:00
-University of Queensland| 18:00
-CMC Global Office| 23:00
-World's Best Bahn Mi Shop| 33:00
+------------Route 100------------
+Gold Coast Avenue | 0min
+Da Nang Centre | 3min
+Hoi An Mall | 13min
+University of Queensland | 18min
+CMC Global Office | 23min
+World's Best Bahn Mi Shop | 33min
 ```
 
 UML Class Diagram:
