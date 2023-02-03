@@ -2,7 +2,7 @@
 Contains the announcer that keeps track of the next stops in the bus trip.
 """
 
-from model import RouteLocation
+from models import RouteLocation
 from stops_finder import NextStopsFinder
 
 
