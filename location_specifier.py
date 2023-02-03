@@ -38,7 +38,7 @@ class CommandlineLocationUpdator(LocationSpecifier):
         self._trip_announcer = trip_announcer
         self._current_location = current_location
 
-    def input_route_number(self):
+    def input_route_number(self) -> None:
         new_route_number = int(input("Input route number: "))
 
         current = self._current_location
@@ -46,7 +46,7 @@ class CommandlineLocationUpdator(LocationSpecifier):
             new_route_number, current.direction, current.coordinates
         )
 
-    def input_direction(self):
+    def input_direction(self) -> None:
         new_direction = Direction[input("Input the direction: ")]
 
         current = self._current_location
@@ -54,7 +54,7 @@ class CommandlineLocationUpdator(LocationSpecifier):
             current.route_number, new_direction, current.coordinates
         )
 
-    def input_coordinates(self):
+    def input_coordinates(self) -> None:
         latitude = input("Input Latitude: ")
         longitude = input("Input Longitude: ")
         new_coordinates = Coordinates(float(latitude), float(longitude))
@@ -64,7 +64,7 @@ class CommandlineLocationUpdator(LocationSpecifier):
             current.route_number, current.direction, new_coordinates
         )
 
-    def update_trip_announcer(self):
+    def update_trip_announcer(self) -> None:
         self.input_route_number()
         self.input_direction()
         self.input_coordinates()

@@ -10,7 +10,7 @@ from stops_finder import NextStopsFinder
 from viewer import CommandlineDisplay
 
 
-def main():
+def main() -> None:
     """
     Initialize the application and run the input-output loop in the command line.
     """
