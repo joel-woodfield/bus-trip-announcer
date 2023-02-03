@@ -4,8 +4,8 @@ update its next stops.
 """
 
 from announcer import TripAnnouncer
-from model import RouteLocation
-from util import Coordinates, Direction
+from models import RouteLocation
+from utils import Coordinates, Direction
 
 
 class LocationSpecifier:

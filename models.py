@@ -4,7 +4,7 @@ Contains classes that model the world with bus stops, routes, and locations with
 
 import datetime
 
-from util import Coordinates, Direction
+from utils import Coordinates, Direction
 
 
 class RouteLocation:

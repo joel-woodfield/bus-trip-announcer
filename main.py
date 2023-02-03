@@ -6,7 +6,7 @@ Application
 from announcer import TripAnnouncer
 from database import LocalDatabase
 from location_specifier import CommandlineLocationUpdator
-from model import RouteLocation
+from models import RouteLocation
 from stops_finder import NextStopsFinder
 from viewer import CommandlineDisplay
 
