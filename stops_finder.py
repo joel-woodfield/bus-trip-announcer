@@ -106,7 +106,7 @@ class NextStopsFinder:
             next_stop_time.route_time - previous_stop_time.route_time
         )
 
-        return proportion_travelled * time_between_stops
+        return proportion_travelled * time_between_stops + previous_stop_time.route_time
 
 
 class NoMoreStopsError(Exception):
