@@ -2,32 +2,29 @@
 Contains classes that specify the current location to the announcer for it to
 update its next stops.
 """
+from typing import Protocol
 
 from announcer import TripAnnouncer
 from models import RouteLocation
 from utils import Coordinates, Direction
 
 
-class LocationSpecifier:
+class LocationSpecifier(Protocol):
     """
     Specifies the current route location to the announcer.
     """
 
     def input_coordinates(self) -> None:
         """Specifies the coordinates to the announcer."""
-        raise NotImplementedError
 
     def input_route_number(self) -> None:
         """Specifies the route number to the announcer."""
-        raise NotImplementedError
 
     def input_direction(self) -> None:
         """Specifies the direction to the announcer."""
-        raise NotImplementedError
 
     def update_trip_announcer(self) -> None:
         """Specifies the current route location to the announcer."""
-        raise NotImplementedError
 
 
 class CommandlineLocationUpdator(LocationSpecifier):
