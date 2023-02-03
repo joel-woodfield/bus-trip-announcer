@@ -26,6 +26,7 @@ class Coordinates:
     longitude: float
         the longitude coordinate
     """
+
     def __init__(self, latitude: float, longitude: float):
         self.latitude = latitude
         self.longitude = longitude
@@ -33,7 +34,7 @@ class Coordinates:
     @classmethod
     def distance_between(
         cls, coordinates1: "Coordinates", coordinates2: "Coordinates"
-    ):
+    ) -> float:
         """
         Returns the distance between the two given coordinates.
         :param coordinates1: the first coordinate
@@ -45,7 +46,7 @@ class Coordinates:
             + (coordinates1.longitude - coordinates2.longitude) ** 2
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         The string representation of the coordinates.
         """

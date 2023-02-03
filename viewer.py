@@ -11,7 +11,8 @@ class TripViewer:
     """
     Displays the next stop times.
     """
-    def show_next_stop_times(self):
+
+    def show_next_stop_times(self) -> None:
         """Displays the next stop times."""
         raise NotImplementedError
 
@@ -20,6 +21,7 @@ class CommandlineDisplay(TripViewer):
     """
     Displays the next stop times on the commandline.
     """
+
     def __init__(self, trip_announcer: TripAnnouncer):
         """
         Initializes the display with the given announcer
@@ -27,7 +29,7 @@ class CommandlineDisplay(TripViewer):
         """
         self._trip_announcer = trip_announcer
 
-    def show_next_stop_times(self):
+    def show_next_stop_times(self) -> None:
         """Displays the next stop times on the commandline."""
         stops_display = "\n".join(
             f"{stop_time.stop.name}"
