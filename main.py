@@ -5,10 +5,10 @@ Application
 
 from announcer import TripAnnouncer
 from database import LocalDatabase
-from io.location_specifier import CommandlineLocationUpdator
+from input_output.location_specifier import CommandlineLocationUpdator
 from models import RouteLocation
 from stops_finder import NextStopsFinder
-from io.viewer import CommandlineDisplay
+from input_output.viewer import CommandlineDisplay
 
 
 def main() -> None:
