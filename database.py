@@ -1,3 +1,7 @@
+"""
+Manages the database that stores the route and stop information.
+"""
+
 import datetime
 
 from model import Route, Stop, StopTime
@@ -5,11 +9,23 @@ from util import Coordinates, Direction
 
 
 class TransportDatabase:
+    """
+    The database for the route information that can be queried.
+    """
     def get_route(self, number: int, direction: Direction) -> Route:
+        """
+        Retrieves the Route object with its stop times for the given route number and direction.
+        :param number: the route number
+        :param direction: the direction of the route
+        :return: the Route object corresponding to the parameters
+        """
         raise NotImplementedError
 
 
 class LocalDatabase(TransportDatabase):
+    """
+    The database for the route information stored in `test_database.csv`.
+    """
     def get_route(self, number: int, direction: Direction) -> Route:
         with open("test_database.csv", "r") as file:
             _ = next(file)  # this is the header

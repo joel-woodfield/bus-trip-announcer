@@ -1,3 +1,7 @@
+"""
+Contains classes that computes the next stops in the route.
+"""
+
 import datetime
 
 from database import TransportDatabase
@@ -6,12 +10,29 @@ from util import Coordinates
 
 
 class NextStopsFinder:
+    """
+    Finds the next stops for a given route and the route location.
+
+    Attributes
+    ----------
+    _transport_database: TransportDatabase
+        the database of the routes and stops for the finder to use
+    """
     def __init__(self, transport_database: TransportDatabase):
+        """
+        Initializes the finder with the give database
+        :param transport_database: the database for the finder to use
+        """
         self._transport_database = transport_database
 
     def get_next_stop_times(
         self, route_location: RouteLocation
     ) -> list[StopTime]:
+        """
+        Returns the next stop times for the given route location.
+        :param route_location: the route location
+        :return: the list of the next stop times.
+        """
         route = self._transport_database.get_route(
             route_location.route_number, route_location.direction
         )
@@ -39,9 +60,18 @@ class NextStopsFinder:
 
         return next_stop_times
 
+    @classmethod
     def _get_next_stop_index(
-        self, stop_times: list[StopTime], route_location: RouteLocation
+        cls, stop_times: list[StopTime], route_location: RouteLocation
     ):
+        """
+        Returns the index in the route's list of stop times for the next stop in the trip after the current route
+        location.
+        :param stop_times: the stop times for the route
+        :param route_location: the current route location
+        :return: the index in the list for the next stop
+        :raises NoMoreStopsError: if there is no more stops in the route after the current route location.
+        """
         for i, stop_time in enumerate(stop_times):
             if stop_time.is_after(route_location):
                 return i
@@ -54,6 +84,13 @@ class NextStopsFinder:
         next_stop_time: StopTime,
         current_location: RouteLocation,
     ) -> datetime.timedelta:
+        """
+        Estimates the time it has taken for the bus to reach the current location.
+        :param previous_stop_time: the stop time of the stop preceding the current location
+        :param next_stop_time: the stop time of the stop succeeding the current location
+        :param current_location: the current route location
+        :return: the estimated time it has taken for the bus to reach the current location
+        """
         distance_between_stops = Stop.distance_between(
             previous_stop_time.stop, next_stop_time.stop
         )
@@ -73,4 +110,7 @@ class NextStopsFinder:
 
 
 class NoMoreStopsError(Exception):
+    """
+    There are no more stops left in the route.
+    """
     pass
