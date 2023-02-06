@@ -5,7 +5,7 @@ Manages the database that stores the route and stop information.
 import datetime
 from typing import Protocol
 
-from models import Route, Stop, StopTime
+from models import Route, Stop
 from utils import Coordinates, Direction
 
 
@@ -16,7 +16,7 @@ class TransportDatabase(Protocol):
 
     def get_route(self, number: int, direction: Direction) -> Route:
         """
-        Retrieves the Route object with its stop times for the given route
+        Retrieves the Route object with its stops for the given route
         number and direction.
         :param number: the route number
         :param direction: the direction of the route
@@ -45,7 +45,7 @@ class LocalDatabase(TransportDatabase):
                 and Direction[row[self.DIRECTION_COLUMN]] == direction
             )
 
-            stop_times = []
+            stops = []
             for row in route_data:
                 (
                     stop_name,
@@ -59,9 +59,12 @@ class LocalDatabase(TransportDatabase):
                 route_time = datetime.timedelta(
                     hours=route_time.hour, minutes=route_time.minute
                 )
-                stop = Stop(
-                    stop_name, Coordinates(float(latitude), float(longitude))
+                stops.append(
+                    Stop(
+                        stop_name,
+                        Coordinates(float(latitude), float(longitude)),
+                        route_time,
+                    )
                 )
-                stop_times.append(StopTime(stop, route_time))
 
-            return Route(number, direction, stop_times)
+            return Route(number, direction, stops)

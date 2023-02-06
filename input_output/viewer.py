@@ -10,31 +10,32 @@ from announcer import TripAnnouncer
 
 class TripViewer(Protocol):
     """
-    Displays the next stop times.
+    Displays the next stop.
     """
 
-    def show_next_stop_times(self) -> None:
-        """Displays the next stop times."""
+    def show_next_stops(self) -> None:
+        """Displays the next stop."""
 
 
 class CommandlineDisplay(TripViewer):
     """
-    Displays the next stop times on the commandline.
+    Displays the next stop on the commandline.
     """
 
     def __init__(self, trip_announcer: TripAnnouncer):
         """
         Initializes the display with the given announcer
-        :param trip_announcer: the announcer that tells the next stops and their times
+        :param trip_announcer: the announcer that tells the next stops and
+            their times
         """
         self._trip_announcer = trip_announcer
 
-    def show_next_stop_times(self) -> None:
-        """Displays the next stop times on the commandline."""
+    def show_next_stops(self) -> None:
+        """Displays the next stops on the commandline."""
         stops_display = "\n".join(
-            f"{stop_time.stop.name}"
-            f" | {self._route_time_format(stop_time.route_time)}"
-            for stop_time in self._trip_announcer.next_stop_times
+            f"{stop.name}"
+            f" | {self._route_time_format(stop.time_until_stop)}"
+            for stop in self._trip_announcer.next_stops
         )
 
         header_length = max(len(line) for line in stops_display.split("\n"))
@@ -51,7 +52,7 @@ class CommandlineDisplay(TripViewer):
         :param route_time: the route time
         :return: the formatted route time
         """
-        hours, minutes, seconds = str(route_time).split(":")
+        hours, minutes, _ = str(route_time).split(":")
         if int(hours) == 0:
             return f"{int(minutes)}min"
         return f"{int(hours)}hr {int(minutes)}min"
