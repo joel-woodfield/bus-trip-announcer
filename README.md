@@ -15,12 +15,12 @@ Da Nang Centre | 3min
 Hoi An Mall | 13min
 University of Queensland | 18min
 CMC Global Office | 23min
-World's Best Bahn Mi Shop | 33min
+World's Best Banh Mi Shop | 33min
 ```
 
 UML Class Diagram:
 
-![bus-trip-announcer drawio (4)](https://user-images.githubusercontent.com/101725589/216296897-e6364e45-c87a-4f8b-b7d9-4d65480eb912.png)
+![bus-trip-announcer drawio (5)](https://user-images.githubusercontent.com/101725589/216879457-9ba0663f-ebe7-464f-a00f-a4ca66c90737.png)
 
 Current Limitations:
 - Each succeeding stop in a route must be further up in the direction specified for the route.
