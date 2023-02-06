@@ -6,7 +6,7 @@ import datetime
 
 from database import TransportDatabase
 from models import RouteLocation, Stop
-from utils import Coordinates
+from utils import Coordinates, Direction
 
 
 class NextStopsFinder:
@@ -90,36 +90,28 @@ class NextStopsFinder:
         cls,
         previous_stop: Stop,
         next_stop: Stop,
-        current_location: RouteLocation,
+        user_location: RouteLocation,
     ) -> datetime.timedelta:
         """
         Estimates the time it has taken for the bus to reach the current
         location.
 
-        This is calculated by calculating the distance from the previous stop
-        to the current location, the distance from the previous stop to the
-        next stop, and taking the proportion:
+        This is calculated by calculating the proportion the user has travelled
+        between the previous and next stops in the direction of the route.
+        The estimated time is then:
 
-        $$ distance(previous stop, current location)
-            / distance(previous stop, next stop) $$
+        $$ proportion * time_between_stops + previous_stop.time_until_stop $$
 
         :param previous_stop: the stop of the stop preceding the
             current location
         :param next_stop: the stop of the stop succeeding the current
             location
-        :param current_location: the current route location
+        :param user_location: the user's current location on the route
         :return: the estimated time it has taken for the bus to reach the
-            current location
+            user's location
         """
-        distance_between_stops = Stop.distance_between(
-            previous_stop, next_stop
-        )
-        proportion_travelled = (
-            Coordinates.distance_between(
-                current_location.coordinates,
-                previous_stop.coordinates,
-            )
-            / distance_between_stops
+        proportion_travelled = cls._proportion_travelled(
+            user_location, previous_stop, next_stop
         )
 
         time_between_stops = (
@@ -130,6 +122,54 @@ class NextStopsFinder:
             proportion_travelled * time_between_stops
             + previous_stop.time_until_stop
         )
+
+    @classmethod
+    def _proportion_travelled(
+        cls,
+        user_location: RouteLocation,
+        previous_stop: Stop,
+        next_stop: Stop,
+    ) -> float:
+        """
+        Returns the proportion the user has travelled between the previous and
+        the next stops in the direction of the route.
+
+        If the user has travelled backwards, it will return 0.
+        :param user_location: the user's current location
+        :param next_stop: the next stop
+        :param previous_stop: the previous stop
+        :return: the proportion the user has travelled between the stops
+        """
+        if user_location.direction is Direction.NORTH:
+            stops_distance = Coordinates.latitude_distance_between(
+                previous_stop.coordinates, next_stop.coordinates
+            )
+            user_distance = Coordinates.latitude_distance_between(
+                previous_stop.coordinates, user_location.coordinates
+            )
+        elif user_location.direction is Direction.SOUTH:
+            stops_distance = -Coordinates.latitude_distance_between(
+                previous_stop.coordinates, next_stop.coordinates
+            )
+            user_distance = -Coordinates.latitude_distance_between(
+                previous_stop.coordinates, user_location.coordinates
+            )
+        elif user_location.direction is Direction.EAST:
+            stops_distance = Coordinates.longitude_distance_between(
+                previous_stop.coordinates, next_stop.coordinates
+            )
+            user_distance = Coordinates.longitude_distance_between(
+                previous_stop.coordinates, user_location.coordinates
+            )
+        elif user_location.direction is Direction.WEST:
+            stops_distance = -Coordinates.longitude_distance_between(
+                previous_stop.coordinates, next_stop.coordinates
+            )
+            user_distance = -Coordinates.longitude_distance_between(
+                previous_stop.coordinates, user_location.coordinates
+            )
+
+        return max(user_distance / stops_distance, 0)
 
 
 class NoMoreStopsError(Exception):
