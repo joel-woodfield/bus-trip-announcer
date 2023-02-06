@@ -51,14 +51,14 @@ class NextStopsFinder:
         # update the route times
         next_stop = route.stops[next_stop_index]
         previous_stop = route.stops[next_stop_index - 1]
-        current_route_time = self._current_route_time_estimate(
+        current_time_until_stop = self._current_time_on_route_estimate(
             previous_stop, next_stop, user
         )
         next_stops = [
             Stop(
                 stop.name,
                 stop.coordinates,
-                stop.time_until_stop - current_route_time,
+                stop.time_until_stop - current_time_until_stop,
             )
             for stop in route.stops[next_stop_index:]
         ]
@@ -82,7 +82,7 @@ class NextStopsFinder:
         raise NoMoreStopsError
 
     @classmethod
-    def _current_route_time_estimate(
+    def _current_time_on_route_estimate(
         cls,
         previous_stop: Stop,
         next_stop: Stop,

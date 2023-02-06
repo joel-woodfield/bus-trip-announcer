@@ -1,4 +1,4 @@
-stop_name,route_time,latitude,longitude,route_number,direction
+stop_name,time_until_stop,latitude,longitude,route_number,direction
 Brisbane Street,0:00,45.6,123.4,100,NORTH
 Brisbane Street,0:00,45.6,123.4,200,NORTH
 Gold Coast Avenue,0:02,45.7,123.5,100,NORTH

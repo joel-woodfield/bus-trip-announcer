@@ -34,7 +34,7 @@ class CommandlineDisplay(TripViewer):
         """Displays the next stops on the commandline."""
         stops_display = "\n".join(
             f"{stop.name}"
-            f" | {self._route_time_format(stop.time_until_stop)}"
+            f" | {self._time_until_stop_format(stop.time_until_stop)}"
             for stop in self._trip_announcer.next_stops
         )
 
@@ -46,13 +46,13 @@ class CommandlineDisplay(TripViewer):
         print(stops_display + "\n")
 
     @classmethod
-    def _route_time_format(cls, route_time: datetime.timedelta) -> str:
+    def _time_until_stop_format(cls, time_until_stop: datetime.timedelta) -> str:
         """
         Returns the formatted route time for the display.
-        :param route_time: the route time
+        :param time_until_stop: the route time
         :return: the formatted route time
         """
-        hours, minutes, _ = str(route_time).split(":")
+        hours, minutes, _ = str(time_until_stop).split(":")
         if int(hours) == 0:
             return f"{int(minutes)}min"
         return f"{int(hours)}hr {int(minutes)}min"
