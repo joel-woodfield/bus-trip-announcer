@@ -1,0 +1,9 @@
+stop_name,time_until_stop,latitude,longitude,route_number,direction
+Stop A,0:00,45.6,123.4,100,NORTH
+Stop B,0:05,45.8,123.5,100,NORTH
+Stop B,0:00,45.8,123.5,100,SOUTH
+Stop A,0:05,45.6,123.4,100,SOUTH
+Stop A,0:00,45.6,123.4,200,EAST
+Stop C,0:05,45.5,124.0,200,EAST
+Stop C,0:00,45.5,124.0,200,WEST
+Stop A,0:05,45.6,123.4,200,WEST

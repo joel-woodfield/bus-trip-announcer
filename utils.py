@@ -81,3 +81,11 @@ class Coordinates:
         The string representation of the coordinates.
         """
         return f"Coordinates({self.latitude}, {self.longitude})"
+
+    def __eq__(self, other):
+        if not isinstance(other, Coordinates):
+            return False
+        return (
+            self.latitude == other.latitude
+            and self.longitude == other.longitude
+        )

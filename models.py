@@ -38,6 +38,15 @@ class User:
         self.direction = direction
         self.coordinates = coordinates
 
+    def __eq__(self, other):
+        if not isinstance(other, User):
+            return False
+        return (
+            self.bus_route_number == other.bus_route_number
+            and self.direction == other.direction
+            and self.coordinates == other.coordinates
+        )
+
 
 class Stop:
     """
@@ -68,6 +77,7 @@ class Stop:
         self.coordinates = coordinates
         self.time_until_stop = time_until_stop
 
+    # this method isn't used
     @classmethod
     def distance_between(cls, stop1: "Stop", stop2: "Stop") -> float:
         """Returns the distance between two stops."""
@@ -95,6 +105,15 @@ class Stop:
     def __str__(self) -> str:
         """The string representation of the stop."""
         return f"Stop({self.name}, {self.coordinates}, {self.time_until_stop})"
+
+    def __eq__(self, other):
+        if not isinstance(other, Stop):
+            return False
+        return (
+            other.name == self.name
+            and other.coordinates == self.coordinates
+            and other.time_until_stop == self.time_until_stop
+        )
 
 
 class Route:
@@ -127,3 +146,13 @@ class Route:
         The string representation of the route.
         """
         return f"Route {self.number} {self.direction}:\n{self.stops}"
+
+    def __eq__(self, other):
+        if not isinstance(other, Route):
+            return False
+        return (
+            self.number == other.number
+            and self.direction is other.direction
+            and self.stops == other.stops
+        )
+
