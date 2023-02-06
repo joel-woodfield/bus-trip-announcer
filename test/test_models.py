@@ -103,3 +103,37 @@ class TestStop:
             Stop("name", Coordinates(0, 0), datetime.timedelta(minutes=1))
             == Stop("name", Coordinates(0, 0), datetime.timedelta(minutes=2))
         )
+
+
+class TestRoute:
+    def test_eq_same(self):
+        assert Route(
+            100,
+            Direction.NORTH,
+            [Stop("name", Coordinates(0, 0), datetime.timedelta())],
+        ) == Route(
+            100,
+            Direction.NORTH,
+            [Stop("name", Coordinates(0, 0), datetime.timedelta())],
+        )
+
+    def test_eq_number(self):
+        assert Route(100, Direction.NORTH, []) != Route(
+            200, Direction.NORTH, []
+        )
+
+    def test_eq_coordinates(self):
+        assert Route(100, Direction.SOUTH, []) != Route(
+            100, Direction.EAST, []
+        )
+
+    def test_eq_stops(self):
+        assert Route(
+            100,
+            Direction.NORTH,
+            [Stop("name", Coordinates(0, 0), datetime.timedelta(minutes=2))],
+        ) != Route(
+            100,
+            Direction.NORTH,
+            [Stop("name2", Coordinates(1, 1), datetime.timedelta(minutes=1))],
+        )
