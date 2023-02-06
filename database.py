@@ -49,21 +49,21 @@ class LocalDatabase(TransportDatabase):
             for row in route_data:
                 (
                     stop_name,
-                    route_time,
+                    time_until_stop,
                     latitude,
                     longitude,
                     _,
                     _,
                 ) = row
-                route_time = datetime.datetime.strptime(route_time, "%H:%M")
-                route_time = datetime.timedelta(
-                    hours=route_time.hour, minutes=route_time.minute
+                time_until_stop = datetime.datetime.strptime(time_until_stop, "%H:%M")
+                time_until_stop = datetime.timedelta(
+                    hours=time_until_stop.hour, minutes=time_until_stop.minute
                 )
                 stops.append(
                     Stop(
                         stop_name,
                         Coordinates(float(latitude), float(longitude)),
-                        route_time,
+                        time_until_stop,
                     )
                 )
 
