@@ -24,7 +24,7 @@ def main() -> None:
 
     while True:
         updator.update_trip_announcer()
-        display.show_next_stop_times()
+        display.show_next_stops()
 
 
 if __name__ == "__main__":
