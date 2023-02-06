@@ -67,6 +67,16 @@ class TestLocalDatabase:
             [],
         )
 
+    def test_database_direction_not_exist(self):
+        database = LocalDatabase()
+        database.set_database_file("../data/test_database1.csv")
+        route = database.get_route(100, Direction.EAST)
+        assert route == Route(
+            100,
+            Direction.EAST,
+            [],
+        )
+
     def test_database_wrong_order(self):
         database = LocalDatabase()
         database.set_database_file("../data/test_database_bad_order.csv")
