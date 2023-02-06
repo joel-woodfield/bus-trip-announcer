@@ -69,4 +69,4 @@ class CommandlineLocationUpdator(LocationSpecifier):
         self.input_route_number()
         self.input_direction()
         self.input_coordinates()
-        self._trip_announcer.update_next_stop_times(self._current_location)
+        self._trip_announcer.update_next_stops(self._current_location)

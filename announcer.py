@@ -9,9 +9,9 @@ from stops_finder import NextStopsFinder
 class TripAnnouncer:
     """
     Keeps track of what the next stops are and the time until the bus reaches
-    those stops (StopTime objects).
+    those stops.
 
-    The method update_next_stop_times must be called to update the information
+    The method update_next_stops must be called to update the information
     as the bus travels.
 
     Attributes
@@ -19,8 +19,8 @@ class TripAnnouncer:
     _next_stops_finder: NextStopsFinder
         the NextStopsFinder object for the announcer to retrieve the next
         stops from
-    next_stop_times: List[StopTime]
-        the next stop times in the bus trip
+    next_stops: List[Stop]
+        the next stops in the bus trip
     route_number: int
         the route number of the bus trip the announcer is getting the stops for
     """
@@ -33,16 +33,14 @@ class TripAnnouncer:
             to retrieve the next stops from
         """
         self._next_stops_finder = next_stops_finder
-        self.next_stop_times = None
+        self.next_stops = None
         self.route_number = -1
 
-    def update_next_stop_times(self, location: RouteLocation) -> None:
+    def update_next_stops(self, location: RouteLocation) -> None:
         """
-        Updates the next stop times the announcer is keeping track of
+        Updates the next stops the announcer is keeping track of
         for the new route location.
         :param location: the new route location
         """
         self.route_number = location.route_number
-        self.next_stop_times = self._next_stops_finder.get_next_stop_times(
-            location
-        )
+        self.next_stops = self._next_stops_finder.get_next_stops(location)
