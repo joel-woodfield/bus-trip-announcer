@@ -5,10 +5,10 @@ Application
 
 from announcer import TripAnnouncer
 from database import LocalDatabase
-from io.location_specifier import CommandlineLocationUpdator
+from input_output.location_specifier import CommandlineLocationUpdator
 from models import RouteLocation
 from stops_finder import NextStopsFinder
-from io.viewer import CommandlineDisplay
+from input_output.viewer import CommandlineDisplay
 
 
 def main() -> None:
@@ -24,7 +24,7 @@ def main() -> None:
 
     while True:
         updator.update_trip_announcer()
-        display.show_next_stop_times()
+        display.show_next_stops()
 
 
 if __name__ == "__main__":
