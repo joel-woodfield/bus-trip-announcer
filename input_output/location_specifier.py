@@ -5,13 +5,13 @@ update its next stops.
 from typing import Protocol
 
 from announcer import TripAnnouncer
-from models import RouteLocation
+from models import User
 from utils import Coordinates, Direction
 
 
 class LocationSpecifier(Protocol):
     """
-    Specifies the current route location to the announcer.
+    Specifies the user with current information to the announcer.
     """
 
     def input_coordinates(self) -> None:
@@ -24,17 +24,17 @@ class LocationSpecifier(Protocol):
         """Specifies the direction to the announcer."""
 
     def update_trip_announcer(self) -> None:
-        """Specifies the current route location to the announcer."""
+        """Specifies the user's current information to the announcer."""
 
 
 class CommandlineLocationUpdator(LocationSpecifier):
     """
-    Specifies the current route location to the announcer by asking for input
-    in the command line.
+    Specifies the user with current information to the announcer by asking for
+    input in the command line.
     """
 
     def __init__(
-        self, trip_announcer: TripAnnouncer, current_location: RouteLocation
+        self, trip_announcer: TripAnnouncer, current_location: User
     ):
         self._trip_announcer = trip_announcer
         self._current_location = current_location
@@ -43,7 +43,7 @@ class CommandlineLocationUpdator(LocationSpecifier):
         new_route_number = int(input("Input route number: "))
 
         current = self._current_location
-        self._current_location = RouteLocation(
+        self._current_location = User(
             new_route_number, current.direction, current.coordinates
         )
 
@@ -51,8 +51,8 @@ class CommandlineLocationUpdator(LocationSpecifier):
         new_direction = Direction[input("Input the direction: ")]
 
         current = self._current_location
-        self._current_location = RouteLocation(
-            current.route_number, new_direction, current.coordinates
+        self._current_location = User(
+            current.bus_route_number, new_direction, current.coordinates
         )
 
     def input_coordinates(self) -> None:
@@ -61,8 +61,8 @@ class CommandlineLocationUpdator(LocationSpecifier):
         new_coordinates = Coordinates(float(latitude), float(longitude))
 
         current = self._current_location
-        self._current_location = RouteLocation(
-            current.route_number, current.direction, new_coordinates
+        self._current_location = User(
+            current.bus_route_number, current.direction, new_coordinates
         )
 
     def update_trip_announcer(self) -> None:
