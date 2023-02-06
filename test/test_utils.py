@@ -47,6 +47,14 @@ class TestCoordinates:
             == 3
         )
 
+    def test_latitude_distance_between_negative(self):
+        assert (
+                Coordinates.latitude_distance_between(
+                    Coordinates(4, 6), Coordinates(1, 2)
+                )
+                == -3
+        )
+
     def test_latitude_distance_between_float(self):
         assert math.isclose(
             Coordinates.latitude_distance_between(
@@ -78,3 +86,10 @@ class TestCoordinates:
             ),
             1.96,
         )
+
+    def test_longitude_distance_between_negative(self):
+        assert (
+            Coordinates.longitude_distance_between(
+                Coordinates(4, 6), Coordinates(1, 2)
+            )
+        ) == -4
