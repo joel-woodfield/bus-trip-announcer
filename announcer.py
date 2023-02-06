@@ -2,7 +2,7 @@
 Contains the announcer that keeps track of the next stops in the bus trip.
 """
 
-from models import RouteLocation
+from models import User
 from stops_finder import NextStopsFinder
 
 
@@ -36,11 +36,11 @@ class TripAnnouncer:
         self.next_stops = None
         self.route_number = -1
 
-    def update_next_stops(self, location: RouteLocation) -> None:
+    def update_next_stops(self, user: User) -> None:
         """
         Updates the next stops the announcer is keeping track of
-        for the new route location.
-        :param location: the new route location
+        for the user with an updated location.
+        :param user: the user
         """
-        self.route_number = location.route_number
-        self.next_stops = self._next_stops_finder.get_next_stops(location)
+        self.route_number = user.bus_route_number
+        self.next_stops = self._next_stops_finder.get_next_stops(user)
