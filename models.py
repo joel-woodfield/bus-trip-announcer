@@ -8,34 +8,33 @@ import datetime
 from utils import Coordinates, Direction
 
 
-class RouteLocation:
+class User:
     """
-    The location within a bus route.
+    A user riding a bus on a bus route.
 
     Attributes
     ----------
-    route_number: int = 0
-        the route number
+    bus_route_number: int = 0
+        the route number of the bus the user is on
     direction: Direction = Direction.NORTH
-        the direction of the route
+        the direction of the route of the bus the user is on
     coordinates: Coordinates = Coordinates(0, 0)
-        the coordinates of the location within the bus route
+        the coordinates of the user's location
     """
 
     def __init__(
         self,
-        route_number: int = 0,
+        bus_route_number: int = 0,
         direction: Direction = Direction.NORTH,
         coordinates: Coordinates = Coordinates(0, 0),
     ):
         """
-        Initializes the route location with the given parameters.
-        :param route_number: the route number
-        :param direction: the direction of the route
-        :param coordinates: the coordinates of the location within the bus
-            route
+        Initializes the user with the given parameters.
+        :param bus_route_number: the route number of the bus the user is on
+        :param direction: the direction of the route of the bus the user is on
+        :param coordinates: the coordinates of the user's location
         """
-        self.route_number = route_number
+        self.bus_route_number = bus_route_number
         self.direction = direction
         self.coordinates = coordinates
 
@@ -76,34 +75,22 @@ class Stop:
             stop1.coordinates, stop2.coordinates
         )
 
-    def is_after(self, route_location: RouteLocation) -> bool:
+    def is_after(self, user: User) -> bool:
         """
-        Returns whether the given route location is after this stop in the
-            route.
-        :param route_location: the route location
-        :return: true if the route location is after this top, false otherwise
+        Returns whether the given user has passed this stop on the route.
+
+        :param user: the user
+        :return: true if the user has passed this top, false otherwise
         """
-        if route_location.direction == Direction.NORTH:
-            return (
-                self.coordinates.latitude
-                >= route_location.coordinates.latitude
-            )
-        if route_location.direction == Direction.SOUTH:
-            return (
-                self.coordinates.latitude
-                <= route_location.coordinates.latitude
-            )
-        if route_location.direction == Direction.EAST:
-            return (
-                self.coordinates.longitude
-                >= route_location.coordinates.longitude
-            )
-        if route_location.direction == Direction.WEST:
-            return (
-                self.coordinates.longitude
-                <= route_location.coordinates.longitude
-            )
-        raise ValueError("The direction of the route location is not valid.")
+        if user.direction == Direction.NORTH:
+            return self.coordinates.latitude >= user.coordinates.latitude
+        if user.direction == Direction.SOUTH:
+            return self.coordinates.latitude <= user.coordinates.latitude
+        if user.direction == Direction.EAST:
+            return self.coordinates.longitude >= user.coordinates.longitude
+        if user.direction == Direction.WEST:
+            return self.coordinates.longitude <= user.coordinates.longitude
+        raise ValueError("The direction of the user is not valid.")
 
     def __str__(self) -> str:
         """The string representation of the stop."""

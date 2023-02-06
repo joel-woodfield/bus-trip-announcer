@@ -5,13 +5,13 @@ Contains classes that computes the next stops in the route.
 import datetime
 
 from database import TransportDatabase
-from models import RouteLocation, Stop
+from models import User, Stop
 from utils import Coordinates, Direction
 
 
 class NextStopsFinder:
     """
-    Finds the next stops for a given route and the route location.
+    Finds the next stops in the user's bus trip.
 
     Attributes
     ----------
@@ -26,27 +26,25 @@ class NextStopsFinder:
         """
         self._transport_database = transport_database
 
-    def get_next_stops(self, route_location: RouteLocation) -> list[Stop]:
+    def get_next_stops(self, user: User) -> list[Stop]:
         """
-        Returns the next stops for the given route location.
-        :param route_location: the route location
-        :return: the list of the next stops.
+        Returns the next stops for the given user.
+        :param user: the user
+        :return: the list of the next stops for the user
         """
         route = self._transport_database.get_route(
-            route_location.route_number, route_location.direction
+            user.bus_route_number, user.direction
         )
 
         try:
-            next_stop_index = self._get_next_stop_index(
-                route.stops, route_location
-            )
+            next_stop_index = self._get_next_stop_index(route.stops, user)
         except NoMoreStopsError:
-            # the route location is past the last stop, so there are no more
+            # the user is past the last stop, so there are no more
             # next stops
             return []
 
         if next_stop_index == 0:
-            # the route location is at the start of the route, so no updates
+            # the user is at the start of the route, so no updates
             # to the route times are required
             return route.stops
 
@@ -54,7 +52,7 @@ class NextStopsFinder:
         next_stop = route.stops[next_stop_index]
         previous_stop = route.stops[next_stop_index - 1]
         current_route_time = self._current_route_time_estimate(
-            previous_stop, next_stop, route_location
+            previous_stop, next_stop, user
         )
         next_stops = [
             Stop(
@@ -68,20 +66,18 @@ class NextStopsFinder:
         return next_stops
 
     @classmethod
-    def _get_next_stop_index(
-        cls, stops: list[Stop], route_location: RouteLocation
-    ) -> int:
+    def _get_next_stop_index(cls, stops: list[Stop], user: User) -> int:
         """
         Returns the index in the route's list of stops for the next stop
-        in the trip after the current route location.
+        in the trip after the user's current location.
         :param stops: the stops for the route
-        :param route_location: the current route location
+        :param user: the user
         :return: the index in the list for the next stop
         :raises NoMoreStopsError: if there is no more stops in the route after
-        the current route location.
+        the current user's location.
         """
         for i, stop in enumerate(stops):
-            if stop.is_after(route_location):
+            if stop.is_after(user):
                 return i
         raise NoMoreStopsError
 
@@ -90,10 +86,10 @@ class NextStopsFinder:
         cls,
         previous_stop: Stop,
         next_stop: Stop,
-        user_location: RouteLocation,
+        user: User,
     ) -> datetime.timedelta:
         """
-        Estimates the time it has taken for the bus to reach the current
+        Estimates the time it has taken for the bus to reach the user's current
         location.
 
         This is calculated by calculating the proportion the user has travelled
@@ -106,12 +102,12 @@ class NextStopsFinder:
             current location
         :param next_stop: the stop of the stop succeeding the current
             location
-        :param user_location: the user's current location on the route
+        :param user: the user
         :return: the estimated time it has taken for the bus to reach the
             user's location
         """
         proportion_travelled = cls._proportion_travelled(
-            user_location, previous_stop, next_stop
+            user, previous_stop, next_stop
         )
 
         time_between_stops = (
@@ -126,7 +122,7 @@ class NextStopsFinder:
     @classmethod
     def _proportion_travelled(
         cls,
-        user_location: RouteLocation,
+        user_location: User,
         previous_stop: Stop,
         next_stop: Stop,
     ) -> float:
