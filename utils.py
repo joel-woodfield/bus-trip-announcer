@@ -47,7 +47,7 @@ class Coordinates:
         )
 
     @classmethod
-    def latitude_distance_between(
+    def latitude_displacement_between(
         cls, coordinates1: "Coordinates", coordinates2: "Coordinates"
     ) -> float:
         """
@@ -62,7 +62,7 @@ class Coordinates:
         return coordinates2.latitude - coordinates1.latitude
 
     @classmethod
-    def longitude_distance_between(
+    def longitude_displacement_between(
         cls, coordinates1: "Coordinates", coordinates2: "Coordinates"
     ) -> float:
         """
