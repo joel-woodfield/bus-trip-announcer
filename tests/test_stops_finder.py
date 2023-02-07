@@ -8,7 +8,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(12345, Direction.NORTH, Coordinates(45.6, 123.4))
+        user = TripStatus(12345, Direction.NORTH, Coordinates(45.6, 123.4))
         stops = stops_finder.get_next_stops(user)
         assert stops == []
 
@@ -16,7 +16,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(200, Direction.NORTH, Coordinates(45.6, 123.4))
+        user = TripStatus(200, Direction.NORTH, Coordinates(45.6, 123.4))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(
@@ -40,7 +40,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(200, Direction.NORTH, Coordinates(45.8, 124.0))
+        user = TripStatus(200, Direction.NORTH, Coordinates(45.8, 124.0))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(
@@ -59,7 +59,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(200, Direction.NORTH, Coordinates(45.7, 123.4))
+        user = TripStatus(200, Direction.NORTH, Coordinates(45.7, 123.4))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(
@@ -80,7 +80,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(200, Direction.NORTH, Coordinates(46.4, 123.4))
+        user = TripStatus(200, Direction.NORTH, Coordinates(46.4, 123.4))
         stops = stops_finder.get_next_stops(user)
         assert stops == []
 
@@ -88,7 +88,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database_direction.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(100, Direction.NORTH, Coordinates(45.6, 123.4))
+        user = TripStatus(100, Direction.NORTH, Coordinates(45.6, 123.4))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(
@@ -107,7 +107,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database_direction.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(100, Direction.SOUTH, Coordinates(45.8, 123.5))
+        user = TripStatus(100, Direction.SOUTH, Coordinates(45.8, 123.5))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(
@@ -126,7 +126,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database_direction.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(200, Direction.EAST, Coordinates(45.6, 123.4))
+        user = TripStatus(200, Direction.EAST, Coordinates(45.6, 123.4))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(
@@ -145,7 +145,7 @@ class TestNextStopsFinder:
         database = LocalDatabase()
         database.set_database_file("../data/test_database_direction.csv")
         stops_finder = NextStopsFinder(database)
-        user = User(200, Direction.WEST, Coordinates(45.5, 124.0))
+        user = TripStatus(200, Direction.WEST, Coordinates(45.5, 124.0))
         stops = stops_finder.get_next_stops(user)
         assert stops == [
             Stop(

@@ -6,7 +6,7 @@ Application
 from announcer import TripAnnouncer
 from database import LocalDatabase
 from input_output.location_specifier import CommandlineLocationUpdator
-from models import User
+from models import TripStatus
 from stops_finder import NextStopsFinder
 from input_output.viewer import CommandlineDisplay
 
@@ -19,7 +19,7 @@ def main() -> None:
     database = LocalDatabase()
     stops_finder = NextStopsFinder(database)
     announcer = TripAnnouncer(stops_finder)
-    updator = CommandlineLocationUpdator(announcer, User())
+    updator = CommandlineLocationUpdator(announcer, TripStatus())
     display = CommandlineDisplay(announcer)
 
     while True:

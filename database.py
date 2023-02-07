@@ -17,7 +17,8 @@ class TransportDatabase(Protocol):
     def get_route(self, number: int, direction: Direction) -> Route:
         """
         Retrieves the Route object with its stops for the given route
-        number and direction.
+        number and direction. The stops are ordered ascending on the time until
+        stop attribute.
         :param number: the route number
         :param direction: the direction of the route
         :return: the Route object corresponding to the parameters
@@ -26,12 +27,12 @@ class TransportDatabase(Protocol):
 
 class LocalDatabase(TransportDatabase):
     """
-    The database for the route information stored in `test_database.csv`.
+    The database for the route information stored in `test_database1.csv`.
     """
 
     ROUTE_NUMBER_COLUMN = 4
     DIRECTION_COLUMN = 5
-    DATABASE_FILE = "data/test_database.csv"
+    DATABASE_FILE = "data/test_database1.csv"
 
     def get_route(self, number: int, direction: Direction) -> Route:
         with open(self.DATABASE_FILE, "r") as file:
@@ -55,7 +56,9 @@ class LocalDatabase(TransportDatabase):
                     _,
                     _,
                 ) = row
-                time_until_stop = datetime.datetime.strptime(time_until_stop, "%H:%M")
+                time_until_stop = datetime.datetime.strptime(
+                    time_until_stop, "%H:%M"
+                )
                 time_until_stop = datetime.timedelta(
                     hours=time_until_stop.hour, minutes=time_until_stop.minute
                 )
@@ -66,5 +69,9 @@ class LocalDatabase(TransportDatabase):
                         time_until_stop,
                     )
                 )
+                stops = sorted(stops, key=lambda stop: stop.time_until_stop)
 
             return Route(number, direction, stops)
+
+    def set_database_file(self, file_location: str) -> None:
+        self.DATABASE_FILE = file_location
