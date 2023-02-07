@@ -8,41 +8,41 @@ import datetime
 from utils import Coordinates, Direction
 
 
-class User:
+class TripStatus:
     """
-    A user riding a bus on a bus route.
+    The status of a bus trip.
 
     Attributes
     ----------
-    bus_route_number: int = 0
-        the route number of the bus the user is on
+    route_number: int = 0
+        the route number of the bus for the trip
     direction: Direction = Direction.NORTH
-        the direction of the route of the bus the user is on
+        the direction of the route of the trip
     coordinates: Coordinates = Coordinates(0, 0)
-        the coordinates of the user's location
+        the current coordinates of the trip
     """
 
     def __init__(
         self,
-        bus_route_number: int = 0,
+        route_number: int = 0,
         direction: Direction = Direction.NORTH,
         coordinates: Coordinates = Coordinates(0, 0),
     ):
         """
-        Initializes the user with the given parameters.
-        :param bus_route_number: the route number of the bus the user is on
-        :param direction: the direction of the route of the bus the user is on
-        :param coordinates: the coordinates of the user's location
+        Initializes the trip status with the given parameters.
+        :param route_number: the route number of the trip's bus
+        :param direction: the direction of the trip
+        :param coordinates: the current coordinates of the trip
         """
-        self.bus_route_number = bus_route_number
+        self.route_number = route_number
         self.direction = direction
         self.coordinates = coordinates
 
     def __eq__(self, other):
-        if not isinstance(other, User):
+        if not isinstance(other, TripStatus):
             return False
         return (
-            self.bus_route_number == other.bus_route_number
+            self.route_number == other.route_number
             and self.direction == other.direction
             and self.coordinates == other.coordinates
         )
@@ -85,22 +85,30 @@ class Stop:
             stop1.coordinates, stop2.coordinates
         )
 
-    def is_after(self, user: User) -> bool:
+    def has_not_been_passed(self, trip_status: TripStatus) -> bool:
         """
-        Returns whether the given user has passed this stop on the route.
+        Returns whether the given trip has passed this stop on the route.
 
-        :param user: the user
-        :return: true if the user has passed this top, false otherwise
+        :param trip_status: the status of the trip that we want to check
+        :return: true if the trip's bus has passed this top, false otherwise
         """
-        if user.direction == Direction.NORTH:
-            return self.coordinates.latitude >= user.coordinates.latitude
-        if user.direction == Direction.SOUTH:
-            return self.coordinates.latitude <= user.coordinates.latitude
-        if user.direction == Direction.EAST:
-            return self.coordinates.longitude >= user.coordinates.longitude
-        if user.direction == Direction.WEST:
-            return self.coordinates.longitude <= user.coordinates.longitude
-        raise ValueError("The direction of the user is not valid.")
+        if trip_status.direction == Direction.NORTH:
+            return (
+                self.coordinates.latitude >= trip_status.coordinates.latitude
+            )
+        if trip_status.direction == Direction.SOUTH:
+            return (
+                self.coordinates.latitude <= trip_status.coordinates.latitude
+            )
+        if trip_status.direction == Direction.EAST:
+            return (
+                self.coordinates.longitude >= trip_status.coordinates.longitude
+            )
+        if trip_status.direction == Direction.WEST:
+            return (
+                self.coordinates.longitude <= trip_status.coordinates.longitude
+            )
+        raise ValueError("The direction of the trip is not valid.")
 
     def __str__(self) -> str:
         """The string representation of the stop."""
@@ -155,4 +163,3 @@ class Route:
             and self.direction is other.direction
             and self.stops == other.stops
         )
-
