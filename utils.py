@@ -15,6 +15,11 @@ class Direction(Enum):
     WEST = 4
 
 
+class SEQDirection(Enum):
+    ZERO = 0
+    ONE = 1
+
+
 class Coordinates:
     """
     A latitude and longitude coordinates.
