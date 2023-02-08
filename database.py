@@ -4,9 +4,10 @@ Manages the database that stores the route and stop information.
 
 import datetime
 from typing import Protocol
+import pandas as pd
 
 from models import Route, Stop
-from utils import Coordinates, Direction
+from utils import Coordinates, Direction, SEQDirection
 
 
 class TransportDatabase(Protocol):
@@ -75,3 +76,98 @@ class LocalDatabase(TransportDatabase):
 
     def set_database_file(self, file_location: str) -> None:
         self.DATABASE_FILE = file_location
+
+
+class SEQDatabase(TransportDatabase):
+
+    def __init__(self):
+        self._route_number = None
+        self._direction = None
+        self._route = None
+
+    def get_initial_route(self, number: int, direction: SEQDirection, coordinates: Coordinates, time: datetime.timedelta) -> Route:
+        if self._route_number != number or self._direction != direction:
+            trip_id = self._get_trip_id(number, direction, coordinates, time)
+            route = self._get_stops_and_times(trip_id)
+            stops = []
+            for _, stop in route.iterrows():
+                name = stop["stop_name"]
+                coordinates = Coordinates(stop["stop_lat"], stop["stop_lon"])
+                time_until_stop = stop["arrival_time"]
+                stops.append(Stop(name, coordinates, time_until_stop))
+            self._route = Route(number, direction, stops)
+        return self._route
+
+    def get_headsigns(self, route_number: int) -> list[str]:
+        route_id = self._get_route_id(route_number)
+
+        trips = pd.read_csv("raw_data/trips.txt")
+        route_trips = trips[trips["route_id"] == route_id]
+        # this can be made faster as there should only be two headsigns
+        return list(route_trips["trip_headsign"].unique())
+
+    def get_direction(self, route_number: int, headsign: str) -> SEQDirection:
+        route_id = self._get_route_id(route_number)
+
+        trips = pd.read_csv("raw_data/trips.txt")
+        direction_id = trips.loc[(trips["route_id"] == route_id) & (trips["trip_headsign"] == headsign), "direction_id"].iloc[0]
+        return SEQDirection(direction_id)
+
+    def _get_trip_id(self, route_number: int, direction: SEQDirection, coordinates: Coordinates, time: datetime.timedelta) -> str:
+        route_id = self._get_route_id(route_number)
+        # get all trips for the given route and direction
+        trips = pd.read_csv("raw_data/trips.txt")
+        trip_ids = trips.loc[(trips["route_id"] == route_id) & (trips["direction_id"] == direction.value), "trip_id"]
+
+        # get the stop times for the trips we are considering
+        stop_times = pd.read_csv("raw_data/stop_times.txt")[["trip_id", "arrival_time", "stop_id"]]
+        stop_times = pd.merge(trip_ids, stop_times)
+
+        # get the next stop estimates' stop id
+        next_stop_id = self._get_closest_two_stops_id(route_number, direction, coordinates).iloc[1]
+
+        # find the earliest stop time of the next stop that is after the current time
+        return stop_times.loc[(stop_times["stop_id"] == int(next_stop_id)) &
+                              (stop_times["arrival_time"].astype("timedelta64") > time), "trip_id"].iloc[0]
+
+    def _get_route_id(self, route_number: int):
+        routes = pd.read_csv("raw_data/routes.txt")
+        return routes.loc[
+            routes["route_short_name"] == str(route_number), "route_id"].iloc[
+            0]
+
+    def _get_route_stops_id_and_coordinates(self, route_number: int, direction: SEQDirection) -> pd.DataFrame:
+        """Returns sorted route stops with its id and coordinates"""
+        route_id = self._get_route_id(route_number)
+        trips = pd.read_csv("raw_data/trips.txt")
+        trip_id_example = trips.loc[(trips["route_id"] == route_id) & (trips["direction_id"] == direction.value), "trip_id"].iloc[0]
+        return self._get_stops_and_times(trip_id_example)
+
+    def _get_closest_two_stops_id(self, route_number: int, direction: SEQDirection, coordinates: Coordinates):
+        stops = self._get_route_stops_id_and_coordinates(route_number, direction)
+        j = -1
+        min_pair_distance = 1_000_000
+        for i in range(len(stops) - 1):
+            stop_latitude = stops.loc[i, "stop_lat"]
+            stop_longitude = stops.loc[i, "stop_lon"]
+            pair_distance = Coordinates.distance_between(Coordinates(stop_latitude, stop_longitude), coordinates)
+            if pair_distance < min_pair_distance:
+                j = i
+                min_pair_distance = pair_distance
+
+        return stops.loc[j:(j + 1), "stop_id"]
+
+    def _get_stops_and_times(self, trip_id: str):
+        stop_times = pd.read_csv("raw_data/stop_times.txt")
+        stop_times["stop_id"] = stop_times["stop_id"].astype(str)
+        stop_times = stop_times[stop_times["trip_id"] == trip_id]
+        stops = pd.read_csv("raw_data/stops.txt")
+        stops = pd.merge(stops, stop_times, on="stop_id")
+        stops = stops.sort_values("stop_sequence")
+        return stops[["stop_id", "stop_name", "arrival_time", "stop_lat", "stop_lon"]]
+
+
+if __name__ == "__main__":
+    database = SEQDatabase()
+    print(database.get_initial_route(66, SEQDirection.ZERO, Coordinates(-27.48, 153.02),
+                               datetime.timedelta(hours=6, minutes=9)))
