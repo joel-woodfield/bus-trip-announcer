@@ -5,6 +5,7 @@ import pandas as pd
 from typing import Protocol, Callable
 from utils import Direction, Coordinates, SEQDirection, Line
 from models import Route, Stop
+from stops_finder import NextStopsFinder
 import datetime
 
 DATA_DIRECTORY = "useful_data"
@@ -21,7 +22,6 @@ class Query:
     JOIN = "join"
     WHERE = "where"
     ORDER_BY = "order by"
-
 
     def __init__(self, table: str):
         self.table = table
@@ -70,7 +70,9 @@ class CSVDatabase(Database):
     def _file_path(self, table_name) -> str:
         return f"{self._data_directory}/{table_name}.csv"
 
-    def _process_operation(self, operation: str, table: pd.DataFrame, args) -> pd.DataFrame:
+    def _process_operation(
+        self, operation: str, table: pd.DataFrame, args
+    ) -> pd.DataFrame:
         if operation == Query.SELECT:
             columns = args
             return table[columns]
@@ -92,8 +94,8 @@ class DirectionFinder:
 
     def get_headsigns(self, route_number: int) -> list[str]:
         query = Query("routes")
-        (query
-            .select(["route_id", "route_short_name"])
+        (
+            query.select(["route_id", "route_short_name"])
             .where(lambda row: row["route_short_name"] == str(route_number))
             .join("trips", "route_id")
             .select("trip_headsign")
@@ -102,11 +104,11 @@ class DirectionFinder:
 
     def get_direction(self, route_number: int, headsign: str) -> SEQDirection:
         query = Query("trips")
-        (query
-            .select(["trip_headsign", "direction_id"])
+        (
+            query.select(["trip_headsign", "direction_id"])
             .where(lambda row: row["trip_headsign"] == headsign)
             .select("direction_id")
-         )
+        )
         direction_id = self._database.get(query).iloc[0]
 
         return SEQDirection[direction_id]
@@ -116,7 +118,13 @@ class RouteFinder:
     def __init__(self, database: Database):
         self._database = database
 
-    def get_route(self, route_number: int, direction: SEQDirection, coordinates: Coordinates, time: datetime.timedelta) -> Route:
+    def get_route(
+        self,
+        route_number: int,
+        direction: SEQDirection,
+        coordinates: Coordinates,
+        time: datetime.timedelta,
+    ) -> Route:
         route_id = self._database.get(
             Query("routes")
             .where(lambda row: row["route_short_name"] == str(route_number))
@@ -125,15 +133,19 @@ class RouteFinder:
 
         example_trip_id = self._database.get(
             Query("trips")
-            .where(lambda row: (row["route_id"] == route_id)
-                                & (row["direction_id"] == direction.value))
+            .where(
+                lambda row: (row["route_id"] == route_id)
+                & (row["direction_id"] == direction.value)
+            )
             .select("trip_id")
         ).iloc[0]
 
         route = self._create_route(example_trip_id, route_number, direction)
 
         next_stop_finder = NextStopsFinder(database)
-        _, next_stop = next_stop_finder.get_in_between_stops(route, coordinates)
+        _, next_stop = next_stop_finder.get_in_between_stops(
+            route, coordinates
+        )
 
         next_stop_id = self._database.get(
             Query("stops")
@@ -143,19 +155,25 @@ class RouteFinder:
 
         trip_id = self._database.get(
             Query("trips")
-            .where(lambda row: (row["route_id"] == route_id)
-                                & (row["direction_id"] == direction.value))
+            .where(
+                lambda row: (row["route_id"] == route_id)
+                & (row["direction_id"] == direction.value)
+            )
             .select("trip_id")
             .join("stop_times", "trip_id")
-            .where(lambda row: (row["stop_id"] == next_stop_id)
-                                & (row["arrival_time"].astype("timedelta64") >= time))
+            .where(
+                lambda row: (row["stop_id"] == next_stop_id)
+                & (row["arrival_time"].astype("timedelta64") >= time)
+            )
             .order_by("arrival_time")
-            .select('trip_id')
+            .select("trip_id")
         ).iloc[0]
 
         return self._create_route(trip_id, route_number, direction)
 
-    def _create_route(self, trip_id: str, route_number: int, direction: SEQDirection):
+    def _create_route(
+        self, trip_id: str, route_number: int, direction: SEQDirection
+    ):
         route_stops_data = self._database.get(
             Query("stop_times")
             .where(lambda row: row["trip_id"] == trip_id)
@@ -177,9 +195,12 @@ class RouteFinder:
 if __name__ == "__main__":
     database = CSVDatabase(DATA_DIRECTORY)
     route_finder = RouteFinder(database)
-    routes = route_finder.get_route(66, SEQDirection.ZERO, Coordinates(-27.48, 153.02), datetime.timedelta(hours=6, minutes=9))
-    print("complete")
-
+    routes = route_finder.get_route(
+        66,
+        SEQDirection.ZERO,
+        Coordinates(-27.48, 153.02),
+        datetime.timedelta(hours=6, minutes=9),
+    )
 
 
 class TransportDatabase(Protocol):
@@ -248,5 +269,3 @@ class LocalDatabase(TransportDatabase):
 
     def set_database_file(self, file_location: str) -> None:
         self.DATABASE_FILE = file_location
-
-
