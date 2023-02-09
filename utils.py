@@ -4,6 +4,8 @@ Contains utility classes for this application.
 
 import math
 from enum import Enum
+from time import time
+from functools import wraps
 
 
 class Direction(Enum):
@@ -94,3 +96,39 @@ class Coordinates:
             self.latitude == other.latitude
             and self.longitude == other.longitude
         )
+
+
+class Line:
+    def __init__(self, start: Coordinates, end: Coordinates):
+        self.start = start
+        self.end = end
+
+    @classmethod
+    def minimum_distance(cls, line: "Line", point: Coordinates):
+        """
+        Calculates the minimum distance from the point to the line.
+
+        See the following link for the equation:
+        https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+        :param line: the line
+        :param point: the point
+        :return: the minimum distance
+        """
+        x0, y0 = point.longitude, point.latitude
+        x1, y1 = line.start.longitude, line.start.latitude
+        x2, y2 = line.end.longitude, line.end.latitude
+
+        return (
+            abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1))
+            / math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        )
+
+def timing(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        ts = time()
+        result = f(*args, **kwargs)
+        te = time()
+        print(f"func:{f.__name__} args:[{args}, {kwargs}] took: {te-ts: 2.4f}s")
+        return result
+    return wrap
