@@ -4,26 +4,74 @@ Contains classes that computes the next stops in the route.
 
 import datetime
 
-from database import Database
-from models import TripStatus, Stop, Route
-from utils import Coordinates, Line, SEQDirection
+from models import Stop, Route
+from utils import Coordinates, Line
+
 
 class NextStopsFinder:
-    def __init__(self, database: Database):
-        self._data_base = database
+    def __init__(self, route: Route):
+        self._route = route
 
-    def get_in_between_stops(self, route: Route, location: Coordinates) -> tuple[Stop, Stop]:
+    @classmethod
+    def get_in_between_stops(
+        cls, stops: list[Stop], location: Coordinates
+    ) -> tuple[Stop, Stop]:
         distances = []
-        for i in range(len(route.stops) - 1):
-            stop1 = route.stops[i]
-            stop2 = route.stops[i + 1]
+        for i in range(len(stops) - 1):
+            stop1 = stops[i]
+            stop2 = stops[i + 1]
             direct_line = Line(stop1.coordinates, stop2.coordinates)
             distance_to_line = Line.minimum_distance(direct_line, location)
             distances.append(distance_to_line)
 
         previous_stop_index = distances.index(min(distances))
-        return (route.stops[previous_stop_index],
-                route.stops[previous_stop_index + 1])
+        return (stops[previous_stop_index], stops[previous_stop_index + 1])
+
+    def get_next_stops(self, location: Coordinates) -> list[Stop]:
+        previous_stop, next_stop = self.get_in_between_stops(
+            self._route.stops, location
+        )
+        time_since_route_start = self._time_since_route_start(
+            previous_stop, next_stop, location
+        )
+        next_stop_index = self._route.stops.index(next_stop)
+
+        next_stops = []
+        for stop in self._route.stops[next_stop_index:]:
+            updated_stop = Stop(
+                stop.name,
+                stop.coordinates,
+                stop.time_until_stop - time_since_route_start,
+            )
+            next_stops.append(updated_stop)
+        return next_stops
+
+    @classmethod
+    def _proportion_travelled(
+        cls, previous_stop: Stop, next_stop: Stop, location: Coordinates
+    ) -> float:
+        distance_from_previous = Coordinates.distance_between(
+            location, previous_stop.coordinates
+        )
+        distance_to_next = Coordinates.distance_between(
+            location, next_stop.coordinates
+        )
+        return distance_from_previous / (
+            distance_from_previous + distance_to_next
+        )
+
+    @classmethod
+    def _time_since_route_start(
+        cls, previous_stop: Stop, next_stop: Stop, location: Coordinates
+    ):
+        proportion_travelled = cls._proportion_travelled(
+            previous_stop, next_stop, location
+        )
+        time_between_stops = (
+            next_stop.time_until_stop - previous_stop.time_until_stop
+        )
+        time_since_last_stop = proportion_travelled * time_between_stops
+        return previous_stop.time_until_stop + time_since_last_stop
 
 
 # class OldNextStopsFinder:
@@ -187,9 +235,3 @@ class NextStopsFinder:
 #             )
 #
 #         return max(user_distance / stops_distance, 0)
-
-
-class NoMoreStopsError(Exception):
-    """
-    There are no more stops left in the route.
-    """

@@ -6,7 +6,7 @@ from typing import Protocol, Callable
 from utils import Direction, Coordinates, SEQDirection, Line
 from models import Route, Stop
 from stops_finder import NextStopsFinder
-import datetime
+from datetime import datetime, timedelta
 
 DATA_DIRECTORY = "useful_data"
 TABLE_FILE_PATH = {
@@ -123,7 +123,7 @@ class RouteFinder:
         route_number: int,
         direction: SEQDirection,
         coordinates: Coordinates,
-        time: datetime.timedelta,
+        time: timedelta,
     ) -> Route:
         route_id = self._database.get(
             Query("routes")
@@ -142,9 +142,8 @@ class RouteFinder:
 
         route = self._create_route(example_trip_id, route_number, direction)
 
-        next_stop_finder = NextStopsFinder(database)
-        _, next_stop = next_stop_finder.get_in_between_stops(
-            route, coordinates
+        _, next_stop = NextStopsFinder.get_in_between_stops(
+            route.stops, coordinates
         )
 
         next_stop_id = self._database.get(
@@ -187,7 +186,11 @@ class RouteFinder:
             name = stop_data["stop_name"]
             latitude = stop_data["stop_lat"]
             longitude = stop_data["stop_lon"]
-            time = stop_data["arrival_time"]
+            time = datetime.strptime(stop_data["arrival_time"],
+                                     "%H:%M:%S")
+            time = timedelta(
+                hours=time.hour, minutes=time.minute, seconds=time.second
+            )
             stops.append(Stop(name, Coordinates(latitude, longitude), time))
         return Route(route_number, direction, stops)
 
@@ -199,7 +202,7 @@ if __name__ == "__main__":
         66,
         SEQDirection.ZERO,
         Coordinates(-27.48, 153.02),
-        datetime.timedelta(hours=6, minutes=9),
+        timedelta(hours=6, minutes=9),
     )
 
 
