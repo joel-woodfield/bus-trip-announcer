@@ -219,7 +219,7 @@ class LocalDatabase(TransportDatabase):
 
     ROUTE_NUMBER_COLUMN = 4
     DIRECTION_COLUMN = 5
-    DATABASE_FILE = "../data/test_database1.csv"
+    DATABASE_FILE = "../../data/test_database1.csv"
 
     def get_route(self, number: int, direction: Direction) -> Route:
         with open(self.DATABASE_FILE, "r") as file:

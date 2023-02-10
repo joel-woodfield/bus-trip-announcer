@@ -2,10 +2,8 @@
 Contains classes that computes the next stops in the route.
 """
 
-import datetime
-
-from models import Route, Stop
-from utils import Coordinates, Line
+from bus_trip_announcer.models import Route, Stop
+from bus_trip_announcer.utils import Coordinates, Line
 
 
 class NextStopsFinder:
