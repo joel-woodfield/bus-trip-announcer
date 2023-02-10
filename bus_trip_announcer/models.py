@@ -1,6 +1,6 @@
 """
-Contains classes that model the world with bus stops, routes, and locations
-within the route.
+Module that contains classes that model the bus network with bus stops, routes,
+and trips.
 """
 
 import datetime
@@ -115,7 +115,17 @@ class Stop:
         """The string representation of the stop."""
         return f"Stop({self.name}, {self.coordinates}, {self.time_until_stop})"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
+        """
+        Checks the equality with another Stop.
+
+        A stop is equal with another if the name, coordinates, and time
+        until stop are all the same.
+
+        :param other: the other object
+        :return: true if the other object is equal with this Route, false
+        otherwise
+        """
         if not isinstance(other, Stop):
             return False
         return (
@@ -162,6 +172,15 @@ class Route:
         return f"Route {self.number} {self.direction}:\n{self.stops}"
 
     def __eq__(self, other):
+        """
+        Checks for equality with the other stop.
+
+        A Route is equal with another Rote if the number, direction, and the
+        list of stops are all the same.
+        :param other: the other object
+        :return: true if the other object is equal with this Route, false
+        otherwise
+        """
         if not isinstance(other, Route):
             return False
         return (
