@@ -22,9 +22,9 @@ Dutton Park Place | 10min
 UQ Lakes station | 12min
 ```
 
-UML Class Diagram:
-
-![bus-trip-announcer drawio (5)](https://user-images.githubusercontent.com/101725589/216879457-9ba0663f-ebe7-464f-a00f-a4ca66c90737.png)
-
 Current Limitations:
 - Routes that do not have two headsigns in the database do not work. An example of this is route 29.
+
+UML Class Diagram:
+
+![new_bus-trip-announcer drawio](https://user-images.githubusercontent.com/101725589/218023724-4830377d-3553-4062-bef9-2160b59390b9.png)
