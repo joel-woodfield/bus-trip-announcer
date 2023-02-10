@@ -1,4 +1,4 @@
-from database import LocalDatabase
+from old_database import LocalDatabase
 from models import Stop, Route
 from utils import Direction, Coordinates
 import datetime
