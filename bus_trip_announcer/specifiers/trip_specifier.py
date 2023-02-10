@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 
-from announcer import TripAnnouncer
-from database.finders import DirectionFinder, RouteFinder
-from models import Route, TripStatus
-from stops_finder import NextStopsFinder
-from utils import Coordinates
+from bus_trip_announcer.announcer import TripAnnouncer
+from bus_trip_announcer.database import DirectionFinder, RouteFinder
+from bus_trip_announcer.models import Route, TripStatus
+from bus_trip_announcer.stops_finder import NextStopsFinder
+from bus_trip_announcer.utils import Coordinates
 
 
 class TripSpecifier(ABC):

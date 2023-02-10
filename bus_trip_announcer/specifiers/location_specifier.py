@@ -4,9 +4,9 @@ update its next stops.
 """
 from abc import ABC, abstractmethod
 
-from announcer import TripAnnouncer
-from models import TripStatus
-from utils import Coordinates, Direction
+from bus_trip_announcer.announcer import TripAnnouncer
+from bus_trip_announcer.models import TripStatus
+from bus_trip_announcer.utils import Coordinates, Direction
 
 
 class LocationSpecifier(ABC):

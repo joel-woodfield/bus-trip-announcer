@@ -5,7 +5,7 @@ within the route.
 
 import datetime
 
-from utils import Coordinates, Direction, SEQDirection
+from bus_trip_announcer.utils import Coordinates, Direction, SEQDirection
 
 
 # Make trip status mutable to make it better for vertical scaling
