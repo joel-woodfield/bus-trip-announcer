@@ -187,8 +187,7 @@ class RouteFinder:
             name = stop_data["stop_name"]
             latitude = stop_data["stop_lat"]
             longitude = stop_data["stop_lon"]
-            time = datetime.strptime(stop_data["arrival_time"],
-                                     "%H:%M:%S")
+            time = datetime.strptime(stop_data["arrival_time"], "%H:%M:%S")
             time = timedelta(
                 hours=time.hour, minutes=time.minute, seconds=time.second
             )

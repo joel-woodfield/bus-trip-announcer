@@ -85,7 +85,6 @@ class SEQDatabase(Protocol):
 
 
 class LocalSEQDatabase:
-
     DATA_PATH = "useful_data"
 
     def __init__(self):
@@ -113,11 +112,11 @@ class LocalSEQDatabase:
         return SEQDirection(direction_id)
 
     def get_route(
-            self,
-            number: int,
-            direction: SEQDirection,
-            coordinates: Coordinates,
-            time: datetime.timedelta,
+        self,
+        number: int,
+        direction: SEQDirection,
+        coordinates: Coordinates,
+        time: datetime.timedelta,
     ) -> Route:
         if self._route_number != number or self._direction != direction:
             trip_id = self._get_trip_id(number, direction, coordinates, time)
@@ -193,7 +192,9 @@ class LocalSEQDatabase:
         direction: SEQDirection,
         coordinates: Coordinates,
     ):
-        stops = self._get_route_stops_and_arrival_times(route_number, direction)
+        stops = self._get_route_stops_and_arrival_times(
+            route_number, direction
+        )
         j = -1
         min_pair_distance = 1_000_000
         for i in range(len(stops) - 1):

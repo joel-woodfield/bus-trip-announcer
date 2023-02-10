@@ -118,10 +118,10 @@ class Line:
         x1, y1 = line.start.longitude, line.start.latitude
         x2, y2 = line.end.longitude, line.end.latitude
 
-        return (
-            abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1))
-            / math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        return abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)) / math.sqrt(
+            (x2 - x1) ** 2 + (y2 - y1) ** 2
         )
+
 
 def timing(f):
     @wraps(f)
@@ -129,6 +129,9 @@ def timing(f):
         ts = time()
         result = f(*args, **kwargs)
         te = time()
-        print(f"func:{f.__name__} args:[{args}, {kwargs}] took: {te-ts: 2.4f}s")
+        print(
+            f"func:{f.__name__} args:[{args}, {kwargs}] took: {te-ts: 2.4f}s"
+        )
         return result
+
     return wrap

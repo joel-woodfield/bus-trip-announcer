@@ -46,7 +46,9 @@ class CommandlineDisplay(TripViewer):
         print(stops_display + "\n")
 
     @classmethod
-    def _time_until_stop_format(cls, time_until_stop: datetime.timedelta) -> str:
+    def _time_until_stop_format(
+        cls, time_until_stop: datetime.timedelta
+    ) -> str:
         """
         Returns the formatted route time for the display.
         :param time_until_stop: the route time

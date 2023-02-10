@@ -139,7 +139,12 @@ class Route:
         the stops of the route and the time it takes to reach them.
     """
 
-    def __init__(self, number: int, direction: Direction | SEQDirection, stops: list[Stop]):
+    def __init__(
+        self,
+        number: int,
+        direction: Direction | SEQDirection,
+        stops: list[Stop],
+    ):
         """
         Initializes the route with the given parameters.
         :param number: the route number

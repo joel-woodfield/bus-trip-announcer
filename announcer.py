@@ -43,4 +43,6 @@ class TripAnnouncer:
         :param trip_status: the updated trip status
         """
         self.route_number = trip_status.route_number
-        self.next_stops = self._next_stops_finder.get_next_stops(trip_status.coordinates)
+        self.next_stops = self._next_stops_finder.get_next_stops(
+            trip_status.coordinates
+        )
