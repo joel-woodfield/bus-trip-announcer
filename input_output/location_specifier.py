@@ -15,21 +15,24 @@ class LocationSpecifier(ABC):
     """
 
     def __init__(
-        self, trip_announcer: TripAnnouncer, current_location: TripStatus
+        self, trip_announcer: TripAnnouncer, current_status: TripStatus
     ):
         self._trip_announcer = trip_announcer
-        self._current_location = current_location
+        self._current_status = current_status
 
     @abstractmethod
     def input_coordinates(self) -> None:
         """Specifies the coordinates to the announcer."""
 
+    @abstractmethod
     def input_route_number(self) -> None:
         """Specifies the route number to the announcer."""
 
+    @abstractmethod
     def input_direction(self) -> None:
         """Specifies the direction to the announcer."""
 
+    @abstractmethod
     def update_trip_announcer(self) -> None:
         """Specifies the current trip status to the announcer."""
 
@@ -43,16 +46,16 @@ class CommandlineLocationUpdator(LocationSpecifier):
     def input_route_number(self) -> None:
         new_route_number = int(input("Input route number: "))
 
-        current = self._current_location
-        self._current_location = TripStatus(
+        current = self._current_status
+        self._current_status = TripStatus(
             new_route_number, current.direction, current.coordinates
         )
 
     def input_direction(self) -> None:
         new_direction = Direction[input("Input the direction: ")]
 
-        current = self._current_location
-        self._current_location = TripStatus(
+        current = self._current_status
+        self._current_status = TripStatus(
             current.route_number, new_direction, current.coordinates
         )
 
@@ -61,11 +64,11 @@ class CommandlineLocationUpdator(LocationSpecifier):
         longitude = input("Input Longitude: ")
         new_coordinates = Coordinates(float(latitude), float(longitude))
 
-        current = self._current_location
-        self._current_location = TripStatus(
+        current = self._current_status
+        self._current_status = TripStatus(
             current.route_number, current.direction, new_coordinates
         )
 
     def update_trip_announcer(self) -> None:
         self.input_coordinates()
-        self._trip_announcer.update_next_stops(self._current_location)
+        self._trip_announcer.update_next_stops(self._current_status)
