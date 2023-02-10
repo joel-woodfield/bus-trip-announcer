@@ -1,5 +1,5 @@
 from stops_finder import *
-from database import LocalDatabase
+from old_database import LocalDatabase
 
 
 class TestNextStopsFinder:
@@ -159,5 +159,3 @@ class TestNextStopsFinder:
                 datetime.timedelta(minutes=5),
             ),
         ]
-
-

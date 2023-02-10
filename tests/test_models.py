@@ -32,51 +32,75 @@ class TestTripStatus:
 
 class TestStop:
     def test_is_after_same(self):
-        assert Stop("name", Coordinates(1, 3), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(1, 3), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.NORTH, Coordinates(1, 2))
         )
-        assert Stop("name", Coordinates(1, 3), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(1, 3), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.SOUTH, Coordinates(1, 2))
         )
-        assert Stop("name", Coordinates(3, 2), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(3, 2), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.EAST, Coordinates(1, 2))
         )
-        assert Stop("name", Coordinates(3, 2), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(3, 2), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.WEST, Coordinates(1, 2))
         )
 
     def test_is_after_true(self):
-        assert Stop("name", Coordinates(2, 3), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(2, 3), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.NORTH, Coordinates(1, 2))
         )
-        assert Stop("name", Coordinates(0, 3), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(0, 3), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.SOUTH, Coordinates(1, 2))
         )
-        assert Stop("name", Coordinates(3, 3), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(3, 3), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.EAST, Coordinates(1, 2))
         )
-        assert Stop("name", Coordinates(3, 1), datetime.timedelta()).has_not_been_passed(
+        assert Stop(
+            "name", Coordinates(3, 1), datetime.timedelta()
+        ).has_not_been_passed(
             TripStatus(100, Direction.WEST, Coordinates(1, 2))
         )
 
     def test_is_after_false(self):
         assert not (
-            Stop("name", Coordinates(0, 3), datetime.timedelta()).has_not_been_passed(
+            Stop(
+                "name", Coordinates(0, 3), datetime.timedelta()
+            ).has_not_been_passed(
                 TripStatus(100, Direction.NORTH, Coordinates(1, 2))
             )
         )
         assert not (
-            Stop("name", Coordinates(2, 3), datetime.timedelta()).has_not_been_passed(
+            Stop(
+                "name", Coordinates(2, 3), datetime.timedelta()
+            ).has_not_been_passed(
                 TripStatus(100, Direction.SOUTH, Coordinates(1, 2))
             )
         )
         assert not (
-            Stop("name", Coordinates(3, 1), datetime.timedelta()).has_not_been_passed(
+            Stop(
+                "name", Coordinates(3, 1), datetime.timedelta()
+            ).has_not_been_passed(
                 TripStatus(100, Direction.EAST, Coordinates(1, 2))
             )
         )
         assert not (
-            Stop("name", Coordinates(3, 3), datetime.timedelta()).has_not_been_passed(
+            Stop(
+                "name", Coordinates(3, 3), datetime.timedelta()
+            ).has_not_been_passed(
                 TripStatus(100, Direction.WEST, Coordinates(1, 2))
             )
         )
