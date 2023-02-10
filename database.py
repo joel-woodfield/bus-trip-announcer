@@ -103,15 +103,16 @@ class DirectionFinder:
         return list(self._database.get(query).unique())
 
     def get_direction(self, route_number: int, headsign: str) -> SEQDirection:
-        query = Query("trips")
+        query = Query("routes")
         (
-            query.select(["trip_headsign", "direction_id"])
+            query.select(["route_id", "route_short_name"])
+            .where(lambda row: row["route_short_name"] == str(route_number))
+            .join("trips", "route_id")
             .where(lambda row: row["trip_headsign"] == headsign)
             .select("direction_id")
         )
         direction_id = self._database.get(query).iloc[0]
-
-        return SEQDirection[direction_id]
+        return SEQDirection(direction_id)
 
 
 class RouteFinder:
