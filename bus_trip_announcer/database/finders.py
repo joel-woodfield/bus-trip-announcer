@@ -133,7 +133,7 @@ class RouteFinder:
 
     def _create_route(
         self, trip_id: str, route_number: int, direction: SEQDirection
-    ):
+    ) -> Route:
         """
         Creates the route object for the given trip id.
         :param trip_id: the trip id
