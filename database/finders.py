@@ -1,9 +1,10 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 from database.database import Database, Query
 from models import Route, Stop
 from stops_finder import NextStopsFinder
-from utils import SEQDirection, Coordinates
+from utils import Coordinates, SEQDirection
+
 
 class DirectionFinder:
     def __init__(self, database: Database):

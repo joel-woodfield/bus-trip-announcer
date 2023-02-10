@@ -2,10 +2,11 @@
 The starting point for the commandline version of the Bus Trip Announcer
 Application
 """
-from database import CSVDatabase, RouteFinder, DirectionFinder
+from database.database import CSVDatabase
+from database.finders import DirectionFinder, RouteFinder
 from specifiers.location_specifier import CommandlineLocationUpdator
-from viewer import CommandlineDisplay
 from specifiers.trip_specifier import CommandLineTripSpecifier
+from viewer import CommandlineDisplay
 
 
 def main() -> None:

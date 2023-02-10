@@ -4,7 +4,7 @@ Contains classes that computes the next stops in the route.
 
 import datetime
 
-from models import Stop, Route
+from models import Route, Stop
 from utils import Coordinates, Line
 
 
