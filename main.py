@@ -21,7 +21,7 @@ def main() -> None:
     trip_specifier.specify_all()
     announcer = trip_specifier.create_announcer()
 
-    updator = CommandlineLocationUpdator(announcer, TripStatus())
+    updator = CommandlineLocationUpdator(announcer, trip_specifier.trip_status)
     display = CommandlineDisplay(announcer)
 
     while True:
