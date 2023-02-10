@@ -7,8 +7,8 @@ from typing import Callable, Protocol
 
 import pandas as pd
 
-from models import Route, Stop
-from utils import Coordinates, Direction
+from bus_trip_announcer.models import Route, Stop
+from bus_trip_announcer.utils import Coordinates, Direction
 
 # file paths to the csv files
 DATA_DIRECTORY = "useful_data"
