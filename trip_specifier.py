@@ -15,7 +15,7 @@ class TripSpecifier(ABC):
     ):
         self._direction_finder = direction_finder
         self._route_finder = route_finder
-        self._trip_status = TripStatus()
+        self.trip_status = TripStatus()
         self._time = None
 
     @abstractmethod
@@ -38,13 +38,13 @@ class TripSpecifier(ABC):
 class CommandLineTripSpecifier(TripSpecifier):
     def specify_route_number(self):
         number = int(input("Input route number: "))
-        self._trip_status.route_number = number
+        self.trip_status.route_number = number
 
     def specify_direction(self):
-        if self._trip_status.route_number is None:
+        if self.trip_status.route_number is None:
             raise NoRouteNumberError
         headsigns = self._direction_finder.get_headsigns(
-            self._trip_status.route_number
+            self.trip_status.route_number
         )
         print("Which headsign did you see?")
         print(f"1: {headsigns[0]}")
@@ -52,14 +52,14 @@ class CommandLineTripSpecifier(TripSpecifier):
         selection = int(input("Enter number: ")) - 1
 
         direction = self._direction_finder.get_direction(
-            self._trip_status.route_number, headsigns[selection]
+            self.trip_status.route_number, headsigns[selection]
         )
-        self._trip_status.direction = direction
+        self.trip_status.direction = direction
 
     def specify_coordinates(self):
         latitude = input("Input Latitude: ")
         longitude = input("Input Longitude: ")
-        self._trip_status.coordinates = Coordinates(
+        self.trip_status.coordinates = Coordinates(
             float(latitude), float(longitude)
         )
 
@@ -76,16 +76,16 @@ class CommandLineTripSpecifier(TripSpecifier):
 
     def _get_route(self) -> Route:
         return self._route_finder.get_route(
-            self._trip_status.route_number,
-            self._trip_status.direction,
-            self._trip_status.coordinates,
+            self.trip_status.route_number,
+            self.trip_status.direction,
+            self.trip_status.coordinates,
             self._time,
         )
 
     def create_announcer(self) -> TripAnnouncer:
         stops_finder = NextStopsFinder(self._get_route())
         announcer = TripAnnouncer(stops_finder)
-        announcer.update_next_stops(self._trip_status)
+        announcer.update_next_stops(self.trip_status)
 
         return announcer
 
