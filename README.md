@@ -25,6 +25,12 @@ UQ Lakes station | 12min
 Current Limitations:
 - Routes that do not have two headsigns in the database do not work. An example of this is route 29.
 
+Future:
+- Make it work for all bus routes.
+- Make a mobile app.
+- Have ways to manage mistakes the app makes in figuring out the trip.
+
+
 UML Class Diagram:
 
 ![new_bus-trip-announcer drawio](https://user-images.githubusercontent.com/101725589/218023724-4830377d-3553-4062-bef9-2160b59390b9.png)
