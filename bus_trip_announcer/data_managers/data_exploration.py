@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-routes = pd.read_csv("../raw_data/routes.txt")
-trips = pd.read_csv("../raw_data/trips.txt")
-stop_times = pd.read_csv("../raw_data/stop_times.txt")
+routes = pd.read_csv("../../raw_data/routes.txt")
+trips = pd.read_csv("../../raw_data/trips.txt")
+stop_times = pd.read_csv("../../raw_data/stop_times.txt")
 stop_times["stop_id"] = stop_times["stop_id"].astype(str)
-stops = pd.read_csv("../raw_data/stops.txt")
+stops = pd.read_csv("../../raw_data/stops.txt")
 
 
 def show_route(route_number: int) -> None:

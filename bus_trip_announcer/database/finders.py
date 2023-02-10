@@ -1,16 +1,32 @@
+"""
+Module containing classes that query from the database.
+"""
+
 from datetime import datetime, timedelta
 
-from database.database import Database, Query
-from models import Route, Stop
-from stops_finder import NextStopsFinder
-from utils import Coordinates, SEQDirection
+from bus_trip_announcer.database.database import Database, Query
+from bus_trip_announcer.models import Route, Stop
+from bus_trip_announcer.stops_finder import NextStopsFinder
+from bus_trip_announcer.utils import Coordinates, SEQDirection
 
 
 class DirectionFinder:
+    """
+    Helper for finding the SEQDirection of a bus trip.
+    """
     def __init__(self, database: Database):
+        """
+        Initializes the finder with the given database.
+        :param database: the database for the finder to look into
+        """
         self._database = database
 
     def get_headsigns(self, route_number: int) -> list[str]:
+        """
+        Return
+        :param route_number:
+        :return:
+        """
         query = Query("routes")
         (
             query.select(["route_id", "route_short_name"])
