@@ -2,8 +2,8 @@
 Contains the announcer that keeps track of the next stops in the bus trip.
 """
 
-from models import Stop, TripStatus
-from stops_finder import NextStopsFinder
+from bus_trip_announcer.models import Stop, TripStatus
+from bus_trip_announcer.stops_finder import NextStopsFinder
 
 
 class TripAnnouncer:

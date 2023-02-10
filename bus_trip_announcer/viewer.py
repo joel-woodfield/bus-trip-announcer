@@ -5,7 +5,7 @@ Contains the classes that display the trip information.
 import datetime
 from typing import Protocol
 
-from announcer import TripAnnouncer
+from bus_trip_announcer.announcer import TripAnnouncer
 
 
 class TripViewer(Protocol):
