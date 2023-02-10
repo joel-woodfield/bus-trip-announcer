@@ -1,13 +1,23 @@
+from announcer import TripAnnouncer
 from database import DirectionFinder, RouteFinder
 from abc import ABC, abstractmethod
 
-from models import TripStatus
+from models import TripStatus, Route
+from stops_finder import NextStopsFinder
 from utils import Coordinates
 
 from datetime import datetime, timedelta
 
 
 class TripSpecifier(ABC):
+    def __init__(
+            self, direction_finder: DirectionFinder, route_finder: RouteFinder
+    ):
+        self._direction_finder = direction_finder
+        self._route_finder = route_finder
+        self._trip_status = TripStatus()
+        self._time = None
+
     @abstractmethod
     def specify_route_number(self):
         pass
@@ -26,13 +36,6 @@ class TripSpecifier(ABC):
 
 
 class CommandLineTripSpecifier(TripSpecifier):
-    def __init__(
-        self, direction_finder: DirectionFinder, route_finder: RouteFinder
-    ):
-        self._direction_finder = direction_finder
-        self._route_finder = route_finder
-        self._trip_status = TripStatus()
-        self._time = None
 
     def specify_route_number(self):
         number = int(input("Input route number: "))
@@ -47,7 +50,7 @@ class CommandLineTripSpecifier(TripSpecifier):
         print("Which headsign did you see?")
         print(f"1: {headsigns[0]}")
         print(f"2: {headsigns[1]}")
-        selection = int(input("Enter number: "))
+        selection = int(input("Enter number: ")) - 1
 
         direction = self._direction_finder.get_direction(
             self._trip_status.route_number, headsigns[selection]
@@ -63,10 +66,30 @@ class CommandLineTripSpecifier(TripSpecifier):
 
     def specify_time(self):
         time = input("Input time: ")
-        t = datetime.strptime(time, "%H:%M:%S")
+        t = datetime.strptime(time, "%H:%M")
         self._time = timedelta(
-            hours=t.hour, minutes=t.minute, seconds=t.second
+            hours=t.hour, minutes=t.minute
         )
+
+    def specify_all(self):
+        self.specify_route_number()
+        self.specify_direction()
+        self.specify_coordinates()
+        self.specify_time()
+
+    def _get_route(self) -> Route:
+        return self._route_finder.get_route(self._trip_status.route_number,
+                                            self._trip_status.direction,
+                                            self._trip_status.coordinates,
+                                            self._time)
+
+    def create_announcer(self) -> TripAnnouncer:
+        stops_finder = NextStopsFinder(self._get_route())
+        announcer = TripAnnouncer(stops_finder)
+        announcer.update_next_stops(self._trip_status)
+
+        return announcer
+
 
 
 class NoRouteNumberError(Exception):
