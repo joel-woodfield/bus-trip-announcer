@@ -1,6 +1,7 @@
 """
 Module that provides query access to the SEQ transport database.
 """
+from __future__ import annotations
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Callable, Protocol
@@ -73,7 +74,7 @@ class Query:
         self.table_name = table_name
         self.operations = []
 
-    def select(self, columns: str | list[str]):
+    def select(self, columns: str | list[str]) -> Query:
         """
         Adds a select operation to the query.
 
@@ -85,7 +86,7 @@ class Query:
         self.operations.append((QueryOperation.SELECT, columns))
         return self
 
-    def join(self, table_name: str, join_column: str):
+    def join(self, table_name: str, join_column: str) -> Query:
         """
         Adds a join operation to the query.
 
@@ -100,7 +101,7 @@ class Query:
         )
         return self
 
-    def where(self, condition: Callable):
+    def where(self, condition: Callable) -> Query:
         """
         Adds a where operation to the query.
 
@@ -115,7 +116,7 @@ class Query:
         self.operations.append((QueryOperation.WHERE, condition))
         return self
 
-    def order_by(self, column: str, ascending: bool = True):
+    def order_by(self, column: str, ascending: bool = True) -> Query:
         """
         Adds an order by operation to the query.
 
