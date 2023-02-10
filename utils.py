@@ -4,8 +4,8 @@ Contains utility classes for this application.
 
 import math
 from enum import Enum
-from time import time
 from functools import wraps
+from time import time
 
 
 class Direction(Enum):
