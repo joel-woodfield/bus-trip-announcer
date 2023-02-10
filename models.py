@@ -5,9 +5,10 @@ within the route.
 
 import datetime
 
-from utils import Coordinates, Direction
+from utils import Coordinates, Direction, SEQDirection
 
 
+# Make trip status mutable to make it better for vertical scaling
 class TripStatus:
     """
     The status of a bus trip.
@@ -25,7 +26,7 @@ class TripStatus:
     def __init__(
         self,
         route_number: int = 0,
-        direction: Direction = Direction.NORTH,
+        direction: Direction | SEQDirection = Direction.NORTH,
         coordinates: Coordinates = Coordinates(0, 0),
     ):
         """
@@ -66,7 +67,7 @@ class Stop:
         self,
         name: str,
         coordinates: Coordinates,
-        time_until_stop: datetime.timedelta,
+        time_until_stop: datetime.timedelta | None,
     ):
         """
         Initializes the stop with the given parameters.
@@ -85,7 +86,7 @@ class Stop:
             stop1.coordinates, stop2.coordinates
         )
 
-    def has_not_been_passed(self, trip_status: TripStatus) -> bool:
+    def has_not_been_passed_by(self, trip_status: TripStatus) -> bool:
         """
         Returns whether the given trip has passed this stop on the route.
 
@@ -138,7 +139,12 @@ class Route:
         the stops of the route and the time it takes to reach them.
     """
 
-    def __init__(self, number: int, direction: Direction, stops: list[Stop]):
+    def __init__(
+        self,
+        number: int,
+        direction: Direction | SEQDirection,
+        stops: list[Stop],
+    ):
         """
         Initializes the route with the given parameters.
         :param number: the route number
