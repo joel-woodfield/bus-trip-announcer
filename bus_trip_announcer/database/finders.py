@@ -23,9 +23,9 @@ class DirectionFinder:
 
     def get_headsigns(self, route_number: int) -> list[str]:
         """
-        Return
-        :param route_number:
-        :return:
+        Returns the possible headsigns for the given route.
+        :param route_number: the route number
+        :return: the possible headsigns
         """
         query = Query("routes")
         (
@@ -37,6 +37,12 @@ class DirectionFinder:
         return list(self._database.get(query).unique())
 
     def get_direction(self, route_number: int, headsign: str) -> SEQDirection:
+        """
+        Returns the SEQDirection that matches the given route and headsign
+        :param route_number: the route number
+        :param headsign: the headsign
+        :return: the SEQDirection for the given route and headsign
+        """
         query = Query("routes")
         (
             query.select(["route_id", "route_short_name"])
@@ -50,7 +56,15 @@ class DirectionFinder:
 
 
 class RouteFinder:
+    """
+    Helper for finding the route information of the bus at a given coordinates
+    and at the given time.
+    """
     def __init__(self, database: Database):
+        """
+        Initializes the finder with the given database.
+        :param database: the database for the finder to look into
+        """
         self._database = database
 
     def get_route(
@@ -60,12 +74,22 @@ class RouteFinder:
         coordinates: Coordinates,
         time: timedelta,
     ) -> Route:
+        """
+        Returns the route object for the bus trip corresponding to the given
+        parameters at the given time.
+        :param route_number: the route number of the trip
+        :param direction: the direction of the bus trip
+        :param coordinates: the coordinates of the bus at the given time
+        :param time: the time
+        :return: the route object
+        """
         route_id = self._database.get(
             Query("routes")
             .where(lambda row: row["route_short_name"] == str(route_number))
             .select("route_id")
         ).iloc[0]
 
+        # get one trip_id with the same route_id
         example_trip_id = self._database.get(
             Query("trips")
             .where(
@@ -75,8 +99,8 @@ class RouteFinder:
             .select("trip_id")
         ).iloc[0]
 
+        # use this route object to find the two stops we are in between
         route = self._create_route(example_trip_id, route_number, direction)
-
         _, next_stop = NextStopsFinder.get_in_between_stops(
             route.stops, coordinates
         )
@@ -87,6 +111,8 @@ class RouteFinder:
             .select("stop_id")
         ).iloc[0]
 
+        # find the trip that arrives at the next stop with the earliest
+        # arrival time after the current time
         trip_id = self._database.get(
             Query("trips")
             .where(
@@ -108,6 +134,13 @@ class RouteFinder:
     def _create_route(
         self, trip_id: str, route_number: int, direction: SEQDirection
     ):
+        """
+        Creates the route object for the given trip id.
+        :param trip_id: the trip id
+        :param route_number: the route number of the trip
+        :param direction: the direction of the trip
+        :return: the Route object
+        """
         route_stops_data = self._database.get(
             Query("stop_times")
             .where(lambda row: row["trip_id"] == trip_id)
