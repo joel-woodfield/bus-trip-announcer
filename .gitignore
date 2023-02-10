@@ -1,2 +1,3 @@
 *.idea
 linter.txt
+**/__pycache__/
