@@ -1,6 +1,6 @@
 """
-Contains classes that specify the current location to the announcer for it to
-update its next stops.
+Module containing classes that specify the current location to the announcer
+for it to update its next stops.
 """
 from abc import ABC, abstractmethod
 
