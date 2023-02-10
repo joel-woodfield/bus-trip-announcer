@@ -1,12 +1,13 @@
 """
 Manages the database that stores the route and stop information.
 """
-import pandas as pd
-from typing import Protocol, Callable
-
-from utils import Direction, Coordinates
-from models import Route, Stop
 from datetime import datetime
+from typing import Callable, Protocol
+
+import pandas as pd
+
+from models import Route, Stop
+from utils import Coordinates, Direction
 
 DATA_DIRECTORY = "useful_data"
 TABLE_FILE_PATH = {
