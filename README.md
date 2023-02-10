@@ -4,18 +4,22 @@ While on the bus, the user can use this app to find out what the next stop is. T
 
 Example usage:
 ```
-Input route number: 100
-Input the direction: NORTH
-Input Latitude: 45.7
-Input Longitude: 123.5
+Input route number: 66
+Which headsign did you see?
+1: RBWH station
+2: UQ Lakes station
+Enter number: 2
+Input Latitude: -27.482215
+Input Longitude: 153.022947
+Input time: 14:17
 
-------------Route 100------------
-Gold Coast Avenue | 0min
-Da Nang Centre | 3min
-Hoi An Mall | 13min
-University of Queensland | 18min
-CMC Global Office | 23min
-World's Best Banh Mi Shop | 33min
+------------------Route 66------------------
+South Bank busway station, platform 2 | 0min
+Mater Hill station, platform 2 | 2min
+PA Hospital station, platform 2 | 5min
+Boggo Road station, platform 6 | 7min
+Dutton Park Place | 10min
+UQ Lakes station | 12min
 ```
 
 UML Class Diagram:
@@ -23,4 +27,4 @@ UML Class Diagram:
 ![bus-trip-announcer drawio (5)](https://user-images.githubusercontent.com/101725589/216879457-9ba0663f-ebe7-464f-a00f-a4ca66c90737.png)
 
 Current Limitations:
-- Each succeeding stop in a route must be further up in the direction specified for the route.
+- Routes that do not have two headsigns in the database do not work. An example of this is route 29.
