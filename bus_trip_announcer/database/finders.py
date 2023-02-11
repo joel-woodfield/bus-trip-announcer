@@ -5,7 +5,7 @@ Module containing classes that query from the database.
 from datetime import datetime, timedelta
 
 from bus_trip_announcer.database.database import Database, Query
-from bus_trip_announcer.models import Route, Stop
+from bus_trip_announcer.models import Trip, Stop
 from bus_trip_announcer.stops_finder import NextStopsFinder
 from bus_trip_announcer.utils import Coordinates, SEQDirection
 
@@ -55,9 +55,9 @@ class DirectionFinder:
         return SEQDirection(direction_id)
 
 
-class RouteFinder:
+class TripFinder:
     """
-    Helper for finding the route information of the bus at a given coordinates
+    Helper for finding the exact trip of the bus at a given coordinates
     and at the given time.
     """
     def __init__(self, database: Database):
@@ -67,21 +67,21 @@ class RouteFinder:
         """
         self._database = database
 
-    def get_route(
+    def get_trip(
         self,
         route_number: int,
         direction: SEQDirection,
         coordinates: Coordinates,
         time: timedelta,
-    ) -> Route:
+    ) -> Trip:
         """
-        Returns the route object for the bus trip corresponding to the given
+        Returns the Trip object for the bus trip corresponding to the given
         parameters at the given time.
         :param route_number: the route number of the trip
         :param direction: the direction of the bus trip
         :param coordinates: the coordinates of the bus at the given time
         :param time: the time
-        :return: the route object
+        :return: the Trip object
         """
         route_id = self._database.get(
             Query("routes")
@@ -99,10 +99,10 @@ class RouteFinder:
             .select("trip_id")
         ).iloc[0]
 
-        # use this route object to find the two stops we are in between
-        route = self._create_route(example_trip_id, route_number, direction)
+        # use this Trip object to find the two stops we are in between
+        trip = self._create_trip(example_trip_id, route_number, direction)
         _, next_stop = NextStopsFinder.get_in_between_stops(
-            route.stops, coordinates
+            trip.stops, coordinates
         )
 
         next_stop_id = self._database.get(
@@ -129,19 +129,19 @@ class RouteFinder:
             .select("trip_id")
         ).iloc[0]
 
-        return self._create_route(trip_id, route_number, direction)
+        return self._create_trip(trip_id, route_number, direction)
 
-    def _create_route(
+    def _create_trip(
         self, trip_id: str, route_number: int, direction: SEQDirection
-    ) -> Route:
+    ) -> Trip:
         """
-        Creates the route object for the given trip id.
+        Creates the Trip object for the given trip id.
         :param trip_id: the trip id
         :param route_number: the route number of the trip
         :param direction: the direction of the trip
-        :return: the Route object
+        :return: the Trip object
         """
-        route_stops_data = self._database.get(
+        trip_data = self._database.get(
             Query("stop_times")
             .where(lambda row: row["trip_id"] == trip_id)
             .order_by("stop_sequence")
@@ -150,7 +150,7 @@ class RouteFinder:
         )
 
         stops = []
-        for _, stop_data in route_stops_data.iterrows():
+        for _, stop_data in trip_data.iterrows():
             name = stop_data["stop_name"]
             latitude = stop_data["stop_lat"]
             longitude = stop_data["stop_lon"]
@@ -159,4 +159,4 @@ class RouteFinder:
                 hours=time.hour, minutes=time.minute, seconds=time.second
             )
             stops.append(Stop(name, Coordinates(latitude, longitude), time))
-        return Route(route_number, direction, stops)
+        return Trip(route_number, direction, stops)
