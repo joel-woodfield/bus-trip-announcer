@@ -2,7 +2,7 @@
 Module that contains classes that computes the next stops of the trip.
 """
 
-from bus_trip_announcer.models import Route, Stop
+from bus_trip_announcer.models import Trip, Stop
 from bus_trip_announcer.utils import Coordinates, Line
 
 
@@ -10,12 +10,12 @@ class NextStopsFinder:
     """
     A finder that finds the next stops of the trip.
     """
-    def __init__(self, route: Route):
+    def __init__(self, trip: Trip):
         """
-        Initializes the finder with the given route.
-        :param route: the route
+        Initializes the finder with the given trip.
+        :param trip: the trip
         """
-        self._route = route
+        self._trip = trip
 
     @classmethod
     def get_in_between_stops(
@@ -52,20 +52,20 @@ class NextStopsFinder:
         :return: the next stops
         """
         previous_stop, next_stop = self.get_in_between_stops(
-            self._route.stops, location
+            self._trip.stops, location
         )
-        time_since_route_start = self._time_since_route_start(
+        time_since_trip_start = self._time_since_trip_start(
             previous_stop, next_stop, location
         )
-        next_stop_index = self._route.stops.index(next_stop)
+        next_stop_index = self._trip.stops.index(next_stop)
 
-        # for each of the next stops, update the time since route start
+        # for each of the next stops, update the time until stop
         next_stops = []
-        for stop in self._route.stops[next_stop_index:]:
+        for stop in self._trip.stops[next_stop_index:]:
             updated_stop = Stop(
                 stop.name,
                 stop.coordinates,
-                stop.time_until_stop - time_since_route_start,
+                stop.time_until_stop - time_since_trip_start,
             )
             next_stops.append(updated_stop)
         return next_stops
@@ -100,7 +100,7 @@ class NextStopsFinder:
         )
 
     @classmethod
-    def _time_since_route_start(
+    def _time_since_trip_start(
         cls, previous_stop: Stop, next_stop: Stop, location: Coordinates
     ):
         """
