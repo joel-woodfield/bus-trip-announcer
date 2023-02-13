@@ -37,6 +37,8 @@ class QueryOperation(Enum):
     ORDER_BY = 4
 
     def __eq__(self, other):
+        if not isinstance(other, QueryOperation):
+            return False
         return self.value == other.value
 
 
