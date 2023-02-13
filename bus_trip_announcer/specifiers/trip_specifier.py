@@ -7,8 +7,8 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 
 from bus_trip_announcer.announcer import TripAnnouncer
-from bus_trip_announcer.database.finders import DirectionFinder, RouteFinder
-from bus_trip_announcer.models import Route, TripStatus
+from bus_trip_announcer.database.finders import DirectionFinder, TripFinder
+from bus_trip_announcer.models import Trip, TripStatus
 from bus_trip_announcer.stops_finder import NextStopsFinder
 from bus_trip_announcer.utils import Coordinates
 
@@ -18,15 +18,15 @@ class TripSpecifier(ABC):
     A specifier for the user to specify the trip they are going on.
     """
     def __init__(
-        self, direction_finder: DirectionFinder, route_finder: RouteFinder
+        self, direction_finder: DirectionFinder, trip_finder: TripFinder
     ):
         """
         Initializes the trip specifier with the given finders.
         :param direction_finder: the direction finder
-        :param route_finder: the route finder
+        :param trip_finder: the route finder
         """
         self._direction_finder = direction_finder
-        self._route_finder = route_finder
+        self._trip_finder = trip_finder
         self.trip_status = TripStatus()
         self._time = None
 
@@ -114,11 +114,11 @@ class CommandLineTripSpecifier(TripSpecifier):
         self.specify_coordinates()
         self.specify_time()
 
-    def _get_route(self) -> Route:
+    def _get_trip(self) -> Trip:
         """
-        Returns the route with the fully-specified trip status and time.
+        Returns the trip with the fully-specified trip status and time.
         """
-        return self._route_finder.get_route(
+        return self._trip_finder.get_trip(
             self.trip_status.route_number,
             self.trip_status.direction,
             self.trip_status.coordinates,
@@ -129,7 +129,7 @@ class CommandLineTripSpecifier(TripSpecifier):
         """
         Creates an announcer with the fully-specified trip status and time.
         """
-        stops_finder = NextStopsFinder(self._get_route())
+        stops_finder = NextStopsFinder(self._get_trip())
         announcer = TripAnnouncer(stops_finder)
         announcer.update_next_stops(self.trip_status)
 

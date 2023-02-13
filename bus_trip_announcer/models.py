@@ -51,7 +51,7 @@ class TripStatus:
 
 class Stop:
     """
-    A bus stop.
+    A bus stop for a bus trip.
 
     Attributes
     ----------
@@ -73,6 +73,7 @@ class Stop:
         Initializes the stop with the given parameters.
         :param name: the name of the stop
         :param coordinates: the location of the stop
+        :param time_until_stop: the time until the bus reaches the stop
         """
         self.name = name
         self.coordinates = coordinates
@@ -135,13 +136,13 @@ class Stop:
         )
 
 
-class Route:
+class Trip:
     """
-    The bus route with its stops and the time it takes to reach them.
+    A bus trip with its stops and the time it takes to reach them.
 
     Attributes
     ----------
-    number: int
+    route_number: int
         the route number
     direction: Direction
         the direction of the route
@@ -151,40 +152,40 @@ class Route:
 
     def __init__(
         self,
-        number: int,
+        route_number: int,
         direction: Direction | SEQDirection,
         stops: list[Stop],
     ):
         """
-        Initializes the route with the given parameters.
-        :param number: the route number
-        :param direction: the direction of the route
-        :param stops: the stops of the route
+        Initializes the trip with the given parameters.
+        :param route_number: the route number
+        :param direction: the direction of the trip
+        :param stops: the stops of the trip
         """
-        self.number = number
+        self.route_number = route_number
         self.direction = direction
         self.stops = stops
 
     def __str__(self) -> str:
         """
-        The string representation of the route.
+        The string representation of the trip.
         """
-        return f"Route {self.number} {self.direction}:\n{self.stops}"
+        return f"Trip on route {self.route_number} {self.direction}:\n{self.stops}"
 
     def __eq__(self, other):
         """
-        Checks for equality with the other stop.
+        Checks for equality with the other object.
 
-        A Route is equal with another Rote if the number, direction, and the
+        A Trip is equal with another Trip if the number, direction, and the
         list of stops are all the same.
         :param other: the other object
         :return: true if the other object is equal with this Route, false
         otherwise
         """
-        if not isinstance(other, Route):
+        if not isinstance(other, Trip):
             return False
         return (
-            self.number == other.number
-            and self.direction is other.direction
-            and self.stops == other.stops
+                self.route_number == other.route_number
+                and self.direction is other.direction
+                and self.stops == other.stops
         )
