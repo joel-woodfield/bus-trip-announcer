@@ -3,7 +3,7 @@ The starting point for the commandline version of the Bus Trip Announcer
 Application
 """
 from database.database import CSVDatabase
-from database.finders import DirectionFinder, RouteFinder
+from database.finders import DirectionFinder, TripFinder
 from specifiers.location_specifier import CommandlineLocationUpdator
 from specifiers.trip_specifier import CommandLineTripSpecifier
 from bus_trip_announcer.viewer import CommandlineDisplay
@@ -15,9 +15,9 @@ def main() -> None:
     line.
     """
     database = CSVDatabase("useful_data")
-    route_finder = RouteFinder(database)
+    trip_finder = TripFinder(database)
     direction_finder = DirectionFinder(database)
-    trip_specifier = CommandLineTripSpecifier(direction_finder, route_finder)
+    trip_specifier = CommandLineTripSpecifier(direction_finder, trip_finder)
     trip_specifier.specify_all()
     announcer = trip_specifier.create_announcer()
 
