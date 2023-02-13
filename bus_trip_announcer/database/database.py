@@ -36,9 +36,8 @@ class QueryOperation(Enum):
     WHERE = 3
     ORDER_BY = 4
 
+    # this equality method is needed for some reason
     def __eq__(self, other):
-        if not isinstance(other, QueryOperation):
-            return False
         return self.value == other.value
 
 
