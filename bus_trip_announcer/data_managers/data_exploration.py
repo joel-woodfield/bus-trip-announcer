@@ -21,15 +21,16 @@ def show_route(route_number: int) -> None:
 
     route = pd.merge(
         route_stops, stops, on="stop_id"
-    )  # .sort_values("stop_sequence")
+    ).sort_values("stop_sequence")
     route = route[["stop_name", "arrival_time", "stop_lat", "stop_lon"]]
     plt.plot(route["stop_lon"], route["stop_lat"], "-bx", mfc="red", mec="red")
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
     plt.title(f"Route {route_number} Map")
+    return route
 
 
-show_route(139)
+route = show_route(29)
 plt.show()
 
 

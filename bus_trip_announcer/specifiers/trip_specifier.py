@@ -79,8 +79,8 @@ class CommandLineTripSpecifier(TripSpecifier):
             self.trip_status.route_number
         )
         print("Which headsign did you see?")
-        print(f"1: {headsigns[0]}")
-        print(f"2: {headsigns[1]}")
+        for i, headsign in enumerate(headsigns, 1):
+            print(f"{i}: {headsign}")
         selection = int(input("Enter number: ")) - 1
 
         direction = self._direction_finder.get_direction(
