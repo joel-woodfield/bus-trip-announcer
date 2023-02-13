@@ -14,7 +14,7 @@ def main() -> None:
     Initialize the application and run the input-output loop in the command
     line.
     """
-    database = CSVDatabase("useful_data")
+    database = CSVDatabase("../useful_data")
     trip_finder = TripFinder(database)
     direction_finder = DirectionFinder(database)
     trip_specifier = CommandLineTripSpecifier(direction_finder, trip_finder)

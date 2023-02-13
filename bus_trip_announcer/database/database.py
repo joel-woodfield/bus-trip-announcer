@@ -36,6 +36,9 @@ class QueryOperation(Enum):
     WHERE = 3
     ORDER_BY = 4
 
+    def __eq__(self, other):
+        return self.value == other.value
+
 
 class Query:
     """
