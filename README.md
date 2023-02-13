@@ -22,9 +22,6 @@ Dutton Park Place | 10min
 UQ Lakes station | 12min
 ```
 
-Current Limitations:
-- Routes that do not have two headsigns in the database do not work. An example of this is route 29.
-
 Future:
 - Make it work for all bus routes.
 - Make a mobile app.
