@@ -1,5 +1,7 @@
-from stops_finder import *
+
 from old_database import LocalDatabase
+
+from bus_trip_announcer.stops_finder import *
 
 
 class TestNextStopsFinder:

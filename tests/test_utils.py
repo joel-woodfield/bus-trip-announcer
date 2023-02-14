@@ -1,6 +1,7 @@
-import pytest
 import math
-from utils import Coordinates
+
+from bus_trip_announcer.utils import Coordinates
+
 
 
 class TestCoordinates:
