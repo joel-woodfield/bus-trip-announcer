@@ -3,3 +3,4 @@ linter.txt
 **/__pycache__/
 /useful_data/
 /raw_data/
+/tests/
