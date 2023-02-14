@@ -29,6 +29,9 @@ Dutton Park Place | 10min
 UQ Lakes station | 12min
 ```
 
+## Dependencies
+- Pandas
+
 ## Future Improvements
 - Make a mobile app.
 - Comprehensive testing.
