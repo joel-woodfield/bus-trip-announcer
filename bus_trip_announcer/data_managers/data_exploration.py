@@ -2,7 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+
 from bus_trip_announcer.utils import SEQDirection
+
 
 routes = pd.read_csv("../../raw_data/routes.txt")
 trips = pd.read_csv("../../raw_data/trips.txt")
@@ -57,6 +59,11 @@ time_until_stops(66, SEQDirection.ZERO, stop_times)
 plt.show()
 
 
+
+
+
+route = show_route(29)
+plt.show()
 
 
 trips["direction_id"].value_counts()

@@ -1,3 +1,4 @@
+
 from bus_trip_announcer.models import *
 from bus_trip_announcer.utils import Coordinates
 

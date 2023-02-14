@@ -3,6 +3,7 @@ import math
 from bus_trip_announcer.utils import Coordinates
 
 
+
 class TestCoordinates:
     def test_init_coordinates(self):
         coordinates = Coordinates(30, 122.3)

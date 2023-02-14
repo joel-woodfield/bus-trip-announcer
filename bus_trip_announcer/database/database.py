@@ -171,6 +171,7 @@ class CSVDatabase(Database):
 
     def get(self, query: Query) -> pd.DataFrame:
         result = self._get_table(query.table_name)
+
         for operation, args in query.operations:
             result = self._process_operation(operation, result, args)
         return result
@@ -199,6 +200,7 @@ class CSVDatabase(Database):
         elif operation == QueryOperation.JOIN:
             table_name, join_column = args
             join_table = self._get_table(table_name)
+
             return pd.merge(table, join_table, on=join_column)
         elif operation == QueryOperation.WHERE:
             condition = args
@@ -213,6 +215,7 @@ class CSVDatabase(Database):
                 self._stop_times = pd.read_csv(self._file_path("stop_times"))
             return self._stop_times
         return pd.read_csv(self._file_path(table_name))
+
 
 
 class TransportDatabase(Protocol):

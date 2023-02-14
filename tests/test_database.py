@@ -4,6 +4,11 @@ from old_database import LocalDatabase
 
 from bus_trip_announcer.models import Route, Stop
 from bus_trip_announcer.utils import Coordinates, Direction
+=======
+from old_database import LocalDatabase
+from models import Stop, Route
+from utils import Direction, Coordinates
+import datetime
 
 
 class TestLocalDatabase:
