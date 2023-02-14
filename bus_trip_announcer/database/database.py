@@ -37,6 +37,7 @@ class QueryOperation(Enum):
     ORDER_BY = 4
 
     # this equality method is needed for some reason
+    # the `is` operation sometimes doesn't work
     def __eq__(self, other):
         return self.value == other.value
 
@@ -210,6 +211,11 @@ class CSVDatabase(Database):
             return table.sort_values(column, ascending=ascending)
 
     def _get_table(self, table_name: str) -> pd.DataFrame:
+        """
+        Retrieves the table with the given table name.
+        :param table_name: the name of the table
+        :return: the table
+        """
         if table_name == "stop_times":
             if self._stop_times is None:
                 self._stop_times = pd.read_csv(self._file_path("stop_times"))
