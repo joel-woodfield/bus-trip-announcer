@@ -2,9 +2,11 @@
 This module allows for the ability to specify the trip for the announcer
 to display the next stops for.
 """
-
+import time
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
+
+import flet as ft
 
 from bus_trip_announcer.announcer import TripAnnouncer
 from bus_trip_announcer.database.finders import DirectionFinder, TripFinder
@@ -53,6 +55,27 @@ class TripSpecifier(ABC):
         """
         Specifies the time.
         """
+
+    def create_announcer(self) -> TripAnnouncer:
+        """
+        Creates an announcer with the fully-specified trip status and time.
+        """
+        stops_finder = NextStopsFinder(self._get_trip())
+        announcer = TripAnnouncer(stops_finder)
+        announcer.update_next_stops(self.trip_status)
+
+        return announcer
+
+    def _get_trip(self) -> Trip:
+        """
+        Returns the trip with the fully-specified trip status and time.
+        """
+        return self._trip_finder.get_trip(
+            self.trip_status.route_number,
+            self.trip_status.direction,
+            self.trip_status.coordinates,
+            self._time,
+        )
 
 
 class CommandLineTripSpecifier(TripSpecifier):
@@ -114,26 +137,7 @@ class CommandLineTripSpecifier(TripSpecifier):
         self.specify_coordinates()
         self.specify_time()
 
-    def _get_trip(self) -> Trip:
-        """
-        Returns the trip with the fully-specified trip status and time.
-        """
-        return self._trip_finder.get_trip(
-            self.trip_status.route_number,
-            self.trip_status.direction,
-            self.trip_status.coordinates,
-            self._time,
-        )
 
-    def create_announcer(self) -> TripAnnouncer:
-        """
-        Creates an announcer with the fully-specified trip status and time.
-        """
-        stops_finder = NextStopsFinder(self._get_trip())
-        announcer = TripAnnouncer(stops_finder)
-        announcer.update_next_stops(self.trip_status)
-
-        return announcer
 
 
 class NoRouteNumberError(Exception):

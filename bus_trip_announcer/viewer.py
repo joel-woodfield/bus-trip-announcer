@@ -16,6 +16,20 @@ class TripViewer(Protocol):
     def show_next_stops(self) -> None:
         """Displays the next stop."""
 
+    @classmethod
+    def _time_until_stop_format(
+            cls, time_until_stop: datetime.timedelta
+    ) -> str:
+        """
+        Returns the formatted route time for the display.
+        :param time_until_stop: the route time
+        :return: the formatted route time
+        """
+        hours, minutes, _ = str(time_until_stop).split(":")
+        if int(hours) == 0:
+            return f"{int(minutes)}min"
+        return f"{int(hours)}hr {int(minutes)}min"
+
 
 class CommandlineDisplay(TripViewer):
     """
@@ -45,16 +59,4 @@ class CommandlineDisplay(TripViewer):
         print("\n" + header)
         print(stops_display + "\n")
 
-    @classmethod
-    def _time_until_stop_format(
-        cls, time_until_stop: datetime.timedelta
-    ) -> str:
-        """
-        Returns the formatted route time for the display.
-        :param time_until_stop: the route time
-        :return: the formatted route time
-        """
-        hours, minutes, _ = str(time_until_stop).split(":")
-        if int(hours) == 0:
-            return f"{int(minutes)}min"
-        return f"{int(hours)}hr {int(minutes)}min"
+
