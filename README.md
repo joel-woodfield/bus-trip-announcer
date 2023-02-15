@@ -31,6 +31,7 @@ UQ Lakes station | 12min
 
 ## Dependencies
 - Pandas
+- Flet
 
 ## Future Improvements
 - Make a mobile app.
