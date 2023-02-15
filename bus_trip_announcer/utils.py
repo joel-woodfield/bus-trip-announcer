@@ -108,8 +108,8 @@ class Line:
         """
         Calculates the minimum distance from the point to the line.
 
-        See the following link for the equation:
-        https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+        See the following link for the equations:
+        https://math.stackexchange.com/questions/2248617/shortest-distance-between-a-point-and-a-line-segment
         :param line: the line
         :param point: the point
         :return: the minimum distance
@@ -118,8 +118,18 @@ class Line:
         x1, y1 = line.start.longitude, line.start.latitude
         x2, y2 = line.end.longitude, line.end.latitude
 
-        return abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)) / math.sqrt(
+        t = -((x1 - x0) * (x2 - x1) + (y1 - y0) * (y2 - y1)) / (
             (x2 - x1) ** 2 + (y2 - y1) ** 2
+        )
+
+        if 0 <= t <= 1:
+            return abs(
+                (x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1)
+            ) / math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+        return min(
+            math.sqrt((x2 - x0) ** 2 + (y2 - y0) ** 2),
+            math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2),
         )
 
 
