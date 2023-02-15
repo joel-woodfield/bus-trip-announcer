@@ -39,6 +39,9 @@ def main2(page: ft.Page) -> None:
     """
     Initialize the GUI application
     """
+    page.window_width = 500
+    page.window_height = 700
+
     database = CSVDatabase("useful_data")
     trip_finder = TripFinder(database)
     direction_finder = DirectionFinder(database)
