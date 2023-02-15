@@ -46,6 +46,7 @@ class CommandlineLocationSpecifier(LocationSpecifier):
     Specifies the current trip status to the announcer by asking for
     input in the command line.
     """
+
     #
     # def input_route_number(self) -> None:
     #     new_route_number = int(input("Input route number: "))

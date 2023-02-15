@@ -19,6 +19,7 @@ class TripSpecifier(ABC):
     """
     A specifier for the user to specify the trip they are going on.
     """
+
     def __init__(
         self, direction_finder: DirectionFinder, trip_finder: TripFinder
     ):
@@ -82,6 +83,7 @@ class CommandLineTripSpecifier(TripSpecifier):
     """
     A TripSpecifier with a command line UI.
     """
+
     def specify_route_number(self):
         number = int(input("Input route number: "))
         self.trip_status.route_number = number
@@ -136,8 +138,6 @@ class CommandLineTripSpecifier(TripSpecifier):
         self.specify_direction()
         self.specify_coordinates()
         self.specify_time()
-
-
 
 
 class NoRouteNumberError(Exception):

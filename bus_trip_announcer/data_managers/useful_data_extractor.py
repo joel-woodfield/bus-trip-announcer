@@ -15,7 +15,7 @@ def main():
         table.to_csv(f"useful_data/{table_name}.csv")
 
     # remove stops that don't have a numerical stop id
-    stops = pd.read_csv(f"../../useful_data/stops.csv")
+    stops = pd.read_csv(f"useful_data/stops.csv")
     stops = stops[stops["stop_id"].str.isdigit()]
     stops.to_csv(f"useful_data/stops.csv")
 

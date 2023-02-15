@@ -14,6 +14,7 @@ class DirectionFinder:
     """
     Helper for finding the SEQDirection of a bus trip.
     """
+
     def __init__(self, database: Database):
         """
         Initializes the finder with the given database.
@@ -60,6 +61,7 @@ class TripFinder:
     Helper for finding the exact trip of the bus at a given coordinates
     and at the given time.
     """
+
     def __init__(self, database: Database):
         """
         Initializes the finder with the given database.

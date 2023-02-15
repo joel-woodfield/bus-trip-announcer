@@ -223,7 +223,6 @@ class CSVDatabase(Database):
         return pd.read_csv(self._file_path(table_name))
 
 
-
 class TransportDatabase(Protocol):
     """
     The database for the route information that can be queried.
@@ -271,9 +270,7 @@ class LocalDatabase(TransportDatabase):
                     _,
                     _,
                 ) = row
-                time_until_stop = datetime.strptime(
-                    time_until_stop, "%H:%M"
-                )
+                time_until_stop = datetime.strptime(time_until_stop, "%H:%M")
                 time_until_stop = timedelta(
                     hours=time_until_stop.hour, minutes=time_until_stop.minute
                 )

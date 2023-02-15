@@ -25,12 +25,15 @@ def main() -> None:
     trip_specifier.specify_all()
     announcer = trip_specifier.create_announcer()
 
-    updator = CommandlineLocationSpecifier(announcer, trip_specifier.trip_status)
+    updator = CommandlineLocationSpecifier(
+        announcer, trip_specifier.trip_status
+    )
     display = CommandlineDisplay(announcer)
 
     while True:
         display.show_next_stops()
         updator.update_trip_announcer()
+
 
 def main2(page: ft.Page) -> None:
     """
@@ -43,7 +46,9 @@ def main2(page: ft.Page) -> None:
     trip_specifier.specify_all()
     announcer = trip_specifier.create_announcer()
 
-    viewer_updator = GUITripViewerAndUpdator(announcer, page, trip_specifier.trip_status)
+    viewer_updator = GUITripViewerAndUpdator(
+        announcer, page, trip_specifier.trip_status
+    )
 
     while True:
         viewer_updator.show_next_stops()

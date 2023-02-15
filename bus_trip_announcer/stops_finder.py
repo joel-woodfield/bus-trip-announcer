@@ -10,6 +10,7 @@ class NextStopsFinder:
     """
     A finder that finds the next stops of the trip.
     """
+
     def __init__(self, trip: Trip):
         """
         Initializes the finder with the given trip.

@@ -18,7 +18,7 @@ class TripViewer(Protocol):
 
     @classmethod
     def _time_until_stop_format(
-            cls, time_until_stop: datetime.timedelta
+        cls, time_until_stop: datetime.timedelta
     ) -> str:
         """
         Returns the formatted route time for the display.
@@ -58,5 +58,3 @@ class CommandlineDisplay(TripViewer):
         )
         print("\n" + header)
         print(stops_display + "\n")
-
-

@@ -23,9 +23,9 @@ def show_route(route_number: int) -> None:
     route_stops = stop_times[stop_times["trip_id"] == example_trip_id]
     route_stops = route_stops[["stop_id", "arrival_time", "stop_sequence"]]
 
-    route = pd.merge(
-        route_stops, stops, on="stop_id"
-    ).sort_values("stop_sequence")
+    route = pd.merge(route_stops, stops, on="stop_id").sort_values(
+        "stop_sequence"
+    )
     route = route[["stop_name", "arrival_time", "stop_lat", "stop_lon"]]
     plt.plot(route["stop_lon"], route["stop_lat"], "-bx", mfc="red", mec="red")
     plt.xlabel("Longitude")
@@ -33,15 +33,20 @@ def show_route(route_number: int) -> None:
     plt.title(f"Route {route_number} Map")
     return route
 
-def time_until_stops(route_number: int, direction: SEQDirection, stop_times: pd.DataFrame):
+
+def time_until_stops(
+    route_number: int, direction: SEQDirection, stop_times: pd.DataFrame
+):
     route_id = routes.loc[
         routes["route_short_name"] == str(route_number), "route_id"
     ].iloc[0]
-    trip_ids = trips.loc[(trips["route_id"] == route_id)
-                        & (trips["direction_id"] == direction.value),
-                        "trip_id"]
+    trip_ids = trips.loc[
+        (trips["route_id"] == route_id)
+        & (trips["direction_id"] == direction.value),
+        "trip_id",
+    ]
 
-    route_stops = pd.merge(stop_times, trip_ids, on='trip_id')
+    route_stops = pd.merge(stop_times, trip_ids, on="trip_id")
 
     for _, trip in route_stops.groupby("trip_id"):
         trip["arrival_time"] = trip["arrival_time"].astype("timedelta64")
@@ -54,12 +59,10 @@ def time_until_stops(route_number: int, direction: SEQDirection, stop_times: pd.
         plt.ylabel("Time Until Stop (minutes)")
         plt.title(f"Route {route_number} Time Until Stop")
 
+
 time_until_stops(66, SEQDirection.ZERO, stop_times)
 # route = show_route(29)
 plt.show()
-
-
-
 
 
 route = show_route(29)

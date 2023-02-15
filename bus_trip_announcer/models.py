@@ -185,7 +185,7 @@ class Trip:
         if not isinstance(other, Trip):
             return False
         return (
-                self.route_number == other.route_number
-                and self.direction is other.direction
-                and self.stops == other.stops
+            self.route_number == other.route_number
+            and self.direction is other.direction
+            and self.stops == other.stops
         )
