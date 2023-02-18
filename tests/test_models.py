@@ -1,6 +1,6 @@
-from models import *
-import datetime
-from utils import Coordinates
+
+from bus_trip_announcer.models import *
+from bus_trip_announcer.utils import Coordinates
 
 
 class TestTripStatus:

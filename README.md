@@ -1,8 +1,15 @@
 # Bus Trip Announcer
 
-While on the bus, the user can use this app to find out what the next stop is. The user can get this info by inputting their location, the bus number, and the headsign of the bus.
+## What is it?
 
-Example usage:
+**BusTripAnnouncer** is an app that tells you the next stops on the bus. The user can get this info by inputting their location, the bus number, and the headsign of the bus. It currently supports buses in South East Queensland, Australia.
+
+## Why is this useful?
+
+Most buses in South East Queensland do not announce the stops. If you do not know the location very well, you may have difficulty figuring out when to get off the bus.
+**BusTripAnnouncer** makes this process easier.
+
+## Example usage
 ```
 Input route number: 66
 Which headsign did you see?
@@ -22,15 +29,17 @@ Dutton Park Place | 10min
 UQ Lakes station | 12min
 ```
 
-Current Limitations:
-- Routes that do not have two headsigns in the database do not work. An example of this is route 29.
+## Dependencies
+- Pandas
+- Flet
 
-Future:
-- Make it work for all bus routes.
+## Future Improvements
 - Make a mobile app.
+- Comprehensive testing.
 - Have ways to manage mistakes the app makes in figuring out the trip.
+- Add support for other locations.
 
 
-UML Class Diagram:
+## UML Class Diagram
 
 ![new_bus-trip-announcer drawio](https://user-images.githubusercontent.com/101725589/218023724-4830377d-3553-4062-bef9-2160b59390b9.png)
