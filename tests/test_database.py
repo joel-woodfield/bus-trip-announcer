@@ -15,13 +15,13 @@ class TestLocalDatabase:
     def test_empty_database(self):
         database = LocalDatabase()
         database.set_database_file("../data/test_database_empty.csv")
-        route = database.get_route(100, Direction.NORTH)
+        route = database.get_trip(100, Direction.NORTH)
         assert route == Route(100, Direction.NORTH, [])
 
     def test_normal_database(self):
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
-        route = database.get_route(100, Direction.NORTH)
+        route = database.get_trip(100, Direction.NORTH)
         assert route == Route(
             100,
             Direction.NORTH,
@@ -67,7 +67,7 @@ class TestLocalDatabase:
     def test_database_route_not_exist(self):
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
-        route = database.get_route(12345, Direction.NORTH)
+        route = database.get_trip(12345, Direction.NORTH)
         assert route == Route(
             12345,
             Direction.NORTH,
@@ -77,7 +77,7 @@ class TestLocalDatabase:
     def test_database_direction_not_exist(self):
         database = LocalDatabase()
         database.set_database_file("../data/test_database1.csv")
-        route = database.get_route(100, Direction.EAST)
+        route = database.get_trip(100, Direction.EAST)
         assert route == Route(
             100,
             Direction.EAST,
@@ -87,7 +87,7 @@ class TestLocalDatabase:
     def test_database_wrong_order(self):
         database = LocalDatabase()
         database.set_database_file("../data/test_database_bad_order.csv")
-        route = database.get_route(200, Direction.EAST)
+        route = database.get_trip(200, Direction.EAST)
         assert route == Route(
             200,
             Direction.EAST,
