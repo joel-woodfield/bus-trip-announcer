@@ -2,12 +2,11 @@ import flet as ft
 
 from bus_trip_announcer.announcer import TripAnnouncer
 from bus_trip_announcer.models import TripStatus
-from bus_trip_announcer.specifiers.location_specifier import LocationSpecifier
 from bus_trip_announcer.utils import Coordinates
 from bus_trip_announcer.viewer import TripViewer
 
 
-class GUITripViewerAndUpdator(TripViewer, LocationSpecifier):
+class GUITripViewerAndUpdator(TripViewer):
     NUM_STOPS_DISPLAYED = 5
 
     def __init__(
