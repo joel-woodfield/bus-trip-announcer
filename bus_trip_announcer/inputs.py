@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import flet as ft
 from waiting import wait
 
+from bus_trip_announcer.announcer import TripAnnouncer
 from bus_trip_announcer.database.finders import DirectionFinder, TripFinder
 from bus_trip_announcer.models import TripStatus
 from bus_trip_announcer.utils import Coordinates
@@ -16,17 +17,16 @@ class LocationInput:
     def __init__(self, input_device: InputDevice):
         self._input_device = input_device
 
-    def input_coordinates(self):
-        self._input_device.input_coordinates()
+    def update_coordinates(self):
+        self._input_device.input_coordinates(update=True)
 
 
 class TripInput:
     def __init__(self, input_device: InputDevice):
         self._input_device = input_device
-        self._location_input = LocationInput(input_device)
 
     def input_coordinates(self) -> None:
-        self._location_input.input_coordinates()
+        self._input_device.input_coordinates()
 
     def input_time(self) -> None:
         self._input_device.input_time()
@@ -44,20 +44,20 @@ class TripInput:
         self.input_time()
 
     def get_trip_status(self) -> TripStatus:
-        return self._input_device.trip_status
+        return self._input_device.announcer.trip_status
 
     def get_time(self) -> timedelta:
         return self._input_device.time
 
 
 class InputDevice(ABC):
-    def __init__(self, direction_finder: DirectionFinder):
+    def __init__(self, direction_finder: DirectionFinder, announcer: TripAnnouncer):
         self._direction_finder = direction_finder
-        self.trip_status = TripStatus()
+        self.announcer = announcer
         self.time = None
 
     @abstractmethod
-    def input_coordinates(self) -> None:
+    def input_coordinates(self, update: bool = False) -> None:
         pass
 
     @abstractmethod
@@ -74,13 +74,16 @@ class InputDevice(ABC):
 
 
 class CommandLineInputDevice(InputDevice):
-    def input_coordinates(self) -> None:
+    def input_coordinates(self, keep_on: bool = False) -> None:
+        if keep_on:
+            raise TypeError("CommandLineInputDevice cannot have input kept on.")
+
         latitude = input("Input Latitude: ")
         longitude = input("Input Longitude: ")
         new_coordinates = Coordinates(float(latitude), float(longitude))
 
-        current = self.trip_status
-        self.trip_status = TripStatus(
+        current = self.announcer.trip_status
+        self.announcer.trip_status = TripStatus(
             current.route_number, current.direction, new_coordinates
         )
 
@@ -96,7 +99,7 @@ class CommandLineInputDevice(InputDevice):
 
     def input_route_number(self) -> None:
         number = int(input("Input route number: "))
-        self.trip_status.route_number = number
+        self.announcer.trip_status.route_number = number
 
     def input_direction(self) -> None:
         """
@@ -108,10 +111,10 @@ class CommandLineInputDevice(InputDevice):
 
         Requires specify_route_number to have been called first.
         """
-        if self.trip_status.route_number is None:
+        if self.announcer.trip_status.route_number is None:
             raise NoRouteNumberError
         headsigns = self._direction_finder.get_headsigns(
-            self.trip_status.route_number
+            self.announcer.trip_status.route_number
         )
         print("Which headsign did you see?")
         for i, headsign in enumerate(headsigns, 1):
@@ -119,21 +122,23 @@ class CommandLineInputDevice(InputDevice):
         selection = int(input("Enter number: ")) - 1
 
         direction = self._direction_finder.get_direction(
-            self.trip_status.route_number, headsigns[selection]
+            self.announcer.trip_status.route_number, headsigns[selection]
         )
-        self.trip_status.direction = direction
+        self.announcer.trip_status.direction = direction
 
 
 class FletInputDevice(InputDevice):
     def __init__(
         self,
         direction_finder: DirectionFinder,
+        announcer: TripAnnouncer,
         page: ft.Page,
     ):
-        super().__init__(direction_finder)
+        super().__init__(direction_finder, announcer)
         self._page = page
 
-    def _has_been_called(self, func):
+    @staticmethod
+    def _has_been_called(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             wrapper.has_been_called = True
@@ -144,7 +149,7 @@ class FletInputDevice(InputDevice):
     def input_route_number(self) -> None:
         @self._has_been_called
         def btn_clicked(_):
-            self.trip_status.route_number = int(field.value)
+            self.announcer.trip_status.route_number = int(field.value)
             self._page.controls.pop(0)
 
         field = ft.TextField(width=100)
@@ -164,14 +169,14 @@ class FletInputDevice(InputDevice):
             @self._has_been_called
             def btn_clicked(_):
                 direction = self._direction_finder.get_direction(
-                    self.trip_status.route_number, headsigns[i]
+                    self.announcer.trip_status.route_number, headsigns[i]
                 )
-                self.trip_status.direction = direction
+                self.announcer.trip_status.direction = direction
                 self._page.controls.pop(0)
             return btn_clicked
 
         headsigns = self._direction_finder.get_headsigns(
-            self.trip_status.route_number
+            self.announcer.trip_status.route_number
         )
 
         prompt = ft.Text("Which Headsign?")
@@ -189,13 +194,16 @@ class FletInputDevice(InputDevice):
 
         wait(lambda: True in [btn.has_been_called for btn in button_functions])
 
-    def input_coordinates(self) -> None:
+    def input_coordinates(self, update: bool = False) -> None:
         @self._has_been_called
         def btn_clicked(_):
-            self.trip_status.coordinates = Coordinates(
+            self.announcer.trip_status.coordinates = Coordinates(
                 float(latitude.value), float(longitude.value)
             )
-            self._page.controls.pop(0)
+            if update:
+                self.announcer.update_next_stops()
+            if not update:
+                self._page.controls.pop(0)
 
         latitude = ft.TextField(width=150)
         row1 = ft.Row(
@@ -222,7 +230,8 @@ class FletInputDevice(InputDevice):
                 ]
             )
         )
-        wait(lambda: btn_clicked.has_been_called)
+        if not update:
+            wait(lambda: btn_clicked.has_been_called)
 
     def input_time(self) -> None:
         @self._has_been_called

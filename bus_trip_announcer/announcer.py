@@ -25,24 +25,20 @@ class TripAnnouncer:
         the route number of the bus trip the announcer is getting the stops for
     """
 
-    def __init__(self, next_stops_finder: NextStopsFinder, trip_status: TripStatus):
+    def __init__(self, trip_status: TripStatus):
         """
         Initializes the announcer with a NextStopsFinder object to be able to
-         retrieve the next stops.
-        :param next_stops_finder: the NextStopsFinder object for the announcer
-            to retrieve the next stops from
+        retrieve the next stops.
         """
-        self._next_stops_finder = next_stops_finder
-        self.update_next_stops(trip_status)
-        self.route_number = None
+        self.next_stops_finder = None
+        self.trip_status = trip_status
+        self.next_stops = None
 
-    def update_next_stops(self, trip_status: TripStatus) -> None:
+    def update_next_stops(self) -> None:
         """
         Updates the next stops the announcer is keeping track of
         for the updated trip status.
-        :param trip_status: the updated trip status
         """
-        self.route_number = trip_status.route_number
-        self.next_stops = self._next_stops_finder.get_next_stops(
-            trip_status.coordinates
+        self.next_stops = self.next_stops_finder.get_next_stops(
+            self.trip_status.coordinates
         )

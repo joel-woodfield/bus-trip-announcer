@@ -5,12 +5,13 @@ Application
 import flet as ft
 
 from bus_trip_announcer.announcer import TripAnnouncer
-from bus_trip_announcer.gui.viewer_updator import GUITripViewerAndUpdator
-from bus_trip_announcer.inputs import TripInput, FletInputDevice
+from bus_trip_announcer.inputs import TripInput, FletInputDevice, LocationInput
+from bus_trip_announcer.models import TripStatus
 from bus_trip_announcer.stops_finder import NextStopsFinder
 from database.database import CSVDatabase
 from database.finders import DirectionFinder, TripFinder
-from bus_trip_announcer.viewer import CommandlineDisplay
+from bus_trip_announcer.viewers import CommandLineTripViewer, FletTripViewer
+
 
 #
 # def main() -> None:
@@ -45,30 +46,30 @@ def main2(page: ft.Page) -> None:
     database = CSVDatabase("useful_data")
     trip_finder = TripFinder(database)
     direction_finder = DirectionFinder(database)
-    # trip_specifier = GUITripSpecifier(direction_finder, trip_finder, page)
-    # trip_specifier.specify_all()
-    # announcer = trip_specifier.create_announcer()
 
-    input_device = FletInputDevice(direction_finder, page)
+    trip_status = TripStatus()
+    announcer = TripAnnouncer(trip_status)
+    input_device = FletInputDevice(direction_finder, announcer, page)
     trip_input = TripInput(input_device)
+
     trip_input.input_all()
-
-    trip_status = trip_input.get_trip_status()
     time = trip_input.get_time()
-    trip = trip_finder.get_trip(trip_status.route_number,
-                                trip_status.direction,
-                                trip_status.coordinates,
-                                time)
-    announcer = TripAnnouncer(NextStopsFinder(trip), trip_status)
-
-
-
-    viewer_updator = GUITripViewerAndUpdator(
-        announcer, page, trip_input.get_trip_status()
+    trip = trip_finder.get_trip(
+        trip_status.route_number,
+        trip_status.direction,
+        trip_status.coordinates,
+        time,
     )
 
+    announcer.next_stops_finder = NextStopsFinder(trip)
+    announcer.update_next_stops()
+
+    viewer = FletTripViewer(announcer, page)
+    location_input = LocationInput(input_device)
+    location_input.update_coordinates()
+
     while True:
-        viewer_updator.show_next_stops()
+        viewer.show_next_stops()
 
 
 if __name__ == "__main__":
