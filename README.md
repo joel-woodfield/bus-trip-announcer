@@ -10,24 +10,13 @@ Most buses in South East Queensland do not announce the stops. If you do not kno
 **BusTripAnnouncer** makes this process easier.
 
 ## Example usage
-```
-Input route number: 66
-Which headsign did you see?
-1: RBWH station
-2: UQ Lakes station
-Enter number: 2
-Input Latitude: -27.482215
-Input Longitude: 153.022947
-Input time: 14:17
+In this imaginary trip, we will catch the route 66 bus from South Bank station to UQ Lakes station. For this demo, we will manually input the coordinates from random points on the route, as well as the current time. For the real mobile application, this will be done automatically using the phone's GPS (work in progress).
 
-------------------Route 66------------------
-South Bank busway station, platform 2 | 0min
-Mater Hill station, platform 2 | 2min
-PA Hospital station, platform 2 | 5min
-Boggo Road station, platform 6 | 7min
-Dutton Park Place | 10min
-UQ Lakes station | 12min
-```
+Note that UQ Lakes station is the last stop for this bus. 
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=gi7HnvUWSAQ" target="_blank">
+ <img src="http://img.youtube.com/vi/gi7HnvUWSAQ/default.jpg" alt="Watch the video" width="240" height="180" border="10" />
+</a>
 
 ## Dependencies
 - Pandas
